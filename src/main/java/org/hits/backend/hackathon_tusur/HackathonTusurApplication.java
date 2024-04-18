@@ -29,7 +29,6 @@ https://stackoverflow.com/questions/38337895/globally-disable-https-keycloak
     environment:
       - KEYCLOAK_ADMIN=${KEYCLOAK_ADMIN}
       - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_PASSWORD}
-      - KC_PROXY=edge
       - KC_HOSTNAME_STRICT=true
       - KC_HTTP_ENABLED=true
       - KC_HTTPS_ENABLED=false
@@ -37,10 +36,9 @@ https://stackoverflow.com/questions/38337895/globally-disable-https-keycloak
     networks:
       - app
 
-$ docker exec -it CONTAINER-ID bash
-$ cd /opt/jboss/keycloak/bin/
--- Run authenticate
-$ ./kcadm.sh config credentials --server http://localhost:8080/auth --realm master --user admin
--- Apply sslRequired to none
-$ ./kcadm.sh update realms/master -s sslRequired=NONE
+docker exec -it 9428a74644f4 bash
+cd /opt/keycloak/bin/
+./kcadm.sh config credentials --server http://localhost:8080 --realm master --user admin
+./kcadm.sh update realms/master -s sslRequired=NONE
+./kcadm.sh update realms/hits-project -s sslRequired=NONE
 */
