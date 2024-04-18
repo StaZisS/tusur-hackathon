@@ -46,6 +46,7 @@ services:
       - KC_HOSTNAME_STRICT=true
       - KC_HTTP_ENABLED=true
       - KC_HTTPS_ENABLED=false
+      - KC_HOSTNAME=51.250.30.109
     networks:
       - app
 
