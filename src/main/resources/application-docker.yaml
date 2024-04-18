@@ -11,5 +11,10 @@ spring:
   jooq:
     sql-dialect: postgres
 
+authServer:
+  authorizationUrl: http://51.250.30.109:8082/realms/hits-project/protocol/openid-connect/auth
+  tokenUrl: http://51.250.30.109:8082/realms/hits-project/protocol/openid-connect/token
+  refreshUrl: http://51.250.30.109:8082/realms/hits-project/protocol/openid-connect/token
+
 server:
   port: 8080

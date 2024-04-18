@@ -22,11 +22,6 @@ spring:
           starttls:
             enable: true
 
-authServer:
-  authorizationUrl: http://localhost:8082/realms/hits-project/protocol/openid-connect/auth
-  tokenUrl: http://localhost:8082/realms/hits-project/protocol/openid-connect/token
-  refreshUrl: http://localhost:8082/realms/hits-project/protocol/openid-connect/token
-
 amazonProperties:
   endpointUrl: https://storage.yandexcloud.net
   bucketName: hackathon-perm-cup-bucket
