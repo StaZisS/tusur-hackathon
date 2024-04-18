@@ -8,6 +8,12 @@ spring:
     password: cNBxF5Ang977BPz7kUr2jHHBMu6bQfnh
     driver-class-name: org.postgresql.Driver
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${ISSUER_URI_OAUTH2:http://localhost:8082/realms/hits-project}
+
   jooq:
     sql-dialect: postgres
 

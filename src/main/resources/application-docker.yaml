@@ -8,6 +8,12 @@ spring:
     password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME}
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${ISSUER_URI_OAUTH2:http://keycloak:8082/realms/hits-project}
+
   jooq:
     sql-dialect: postgres
 

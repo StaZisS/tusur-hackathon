@@ -5,11 +5,6 @@ spring:
     multipart:
       max-file-size: 500MB
       max-request-size: 1000MB
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: ${ISSUER_URI_OAUTH2:http://localhost:8082/realms/hits-project}
   mail:
     host: smtp.gmail.com
     port: 587
