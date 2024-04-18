@@ -36,7 +36,7 @@ https://stackoverflow.com/questions/38337895/globally-disable-https-keycloak
     networks:
       - app
 
-docker exec -it 25c09dcefcad bash
+docker exec -it a166954dff53 bash
 cd /opt/keycloak/bin/
 ./kcadm.sh config credentials --server http://localhost:8080 --realm master --user admin
 ./kcadm.sh update realms/master -s sslRequired=NONE

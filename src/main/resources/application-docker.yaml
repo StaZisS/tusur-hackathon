@@ -12,7 +12,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${ISSUER_URI_OAUTH2:http://keycloak:8082/realms/hits-project}
+          issuer-uri: ${ISSUER_URI_OAUTH2:http://51.250.30.109:8082/realms/hits-project}
 
   jooq:
     sql-dialect: postgres
