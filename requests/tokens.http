@@ -1,0 +1,4 @@
+POST http://localhost:8082/realms/hits-project/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+client_id=users-app&client_secret=kIQXuZU8JoE7SXxYMRXkTOQPDdOu4pN7&grant_type=password&username=zdravia&password=12345678

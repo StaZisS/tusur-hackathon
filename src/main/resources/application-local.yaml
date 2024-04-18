@@ -1,0 +1,15 @@
+spring:
+  liquibase:
+    enabled: false
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/hackathon
+    username: postgres
+    password: cNBxF5Ang977BPz7kUr2jHHBMu6bQfnh
+    driver-class-name: org.postgresql.Driver
+
+  jooq:
+    sql-dialect: postgres
+
+server:
+  port: 8080

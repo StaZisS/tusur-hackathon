@@ -1,0 +1,59 @@
+version: '3.8'
+
+include:
+  - db-common.yml
+
+services:
+  application:
+    env_file:
+      - .env
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${HACKATHON_DB}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
+    build:
+      dockerfile: Dockerfile
+      network: host
+      context: .
+      args:
+        - DB_URL=jdbc:postgresql://localhost:5432/${HACKATHON_DB}
+        - DB_USERNAME=${POSTGRES_USER}
+        - DB_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - '8080:8080'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+      migration:
+        condition: service_completed_successfully
+    networks:
+      - app
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.2
+    env_file:
+      - .env
+    ports:
+      - '8082:8080'
+    command: [ "start-dev", "--import-realm", "--log-level=ERROR" ]
+    volumes:
+      - ./config/keycloak/import/realm.json:/opt/keycloak/data/import/realm.json:ro
+    environment:
+      - KEYCLOAK_ADMIN=${KEYCLOAK_ADMIN}
+      - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_PASSWORD}
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://0.0.0.0:8080/realms/master" ]
+      start_period: 10s
+      interval: 30s
+      retries: 3
+      timeout: 5s
+    networks:
+      - app
+
+networks:
+  app:
+    name: app_network
+    external: true
