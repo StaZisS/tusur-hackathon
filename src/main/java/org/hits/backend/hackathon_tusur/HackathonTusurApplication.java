@@ -36,4 +36,11 @@ https://stackoverflow.com/questions/38337895/globally-disable-https-keycloak
       - KC_HOSTNAME=51.250.30.109
     networks:
       - app
+
+$ docker exec -it CONTAINER-ID bash
+$ cd /opt/jboss/keycloak/bin/
+-- Run authenticate
+$ ./kcadm.sh config credentials --server http://localhost:8080/auth --realm master --user admin
+-- Apply sslRequired to none
+$ ./kcadm.sh update realms/master -s sslRequired=NONE
 */
