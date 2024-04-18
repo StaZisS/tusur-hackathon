@@ -46,7 +46,7 @@ services:
       - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_PASSWORD}
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://0.0.0.0:8080/realms/master" ]
-      start_period: 20s
+      start_period: 60s
       interval: 30s
       retries: 3
       timeout: 20s
