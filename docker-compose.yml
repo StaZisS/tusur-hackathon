@@ -1,8 +1,5 @@
 version: '3.8'
 
-include:
-  - db-common.yml
-
 services:
   application:
     env_file:
@@ -49,7 +46,45 @@ services:
     networks:
       - app
 
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - '5432:5432'
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready", "-d", "db_prod" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+      - postgres:/var/lib/postgresql/data
+    networks:
+      - app
+
+  migration:
+    image: migration:latest
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - DB_URL=jdbc:postgresql://postgres:5432/${HACKATHON_DB}
+      - DB_USER=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_SCHEMA=public
+    command: "update"
+    networks:
+      - app
+
+volumes:
+  postgres:
+    driver: local
+
 networks:
   app:
-    name: app_network
-    external: true
+    driver: bridge
