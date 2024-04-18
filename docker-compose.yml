@@ -42,9 +42,10 @@ services:
     environment:
       - KEYCLOAK_ADMIN=${KEYCLOAK_ADMIN}
       - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_PASSWORD}
-      - KC_HOSTNAME_STRICT=false
-      - KC_HOSTNAME_STRICT_HTTPS=false
       - KC_PROXY=edge
+      - KC_HOSTNAME_STRICT=true
+      - KC_HTTP_ENABLED=true
+      - KC_HTTPS_ENABLED=false
     networks:
       - app
 
