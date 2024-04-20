@@ -9,6 +9,7 @@ public record WishlistItemResponse (
         FileWithLinkDto mainPhoto,
         String name,
         BigDecimal price,
-        Integer rating
+        Integer rating,
+        boolean isClosed
 ) {
 }

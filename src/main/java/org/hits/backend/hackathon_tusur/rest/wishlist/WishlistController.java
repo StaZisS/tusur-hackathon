@@ -99,8 +99,8 @@ public class WishlistController {
 
     @DeleteMapping("/item/{itemId}/photo")
     public void removePhotoFromItem(@RequestParam(value = "photoIds") String[] photoIds,
-                                  @PathVariable(value = "itemId") String itemId,
-                                  JwtAuthenticationToken token) {
+                                    @PathVariable(value = "itemId") String itemId,
+                                    JwtAuthenticationToken token) {
         var dto = new RemovePhotoToWishlistItemDto(
                 photoIds,
                 token.getTokenAttributes().get("sub").toString()
@@ -110,6 +110,13 @@ public class WishlistController {
 
     @GetMapping("/{userId}")
     public WishlistResponse getWishlistUser(@PathVariable(value = "userId") String userId) {
+        var response = wishlistService.getWishlistUser(userId);
+        return convertToResponse(response);
+    }
+
+    @GetMapping("/my")
+    public WishlistResponse getMyWishlist(JwtAuthenticationToken token) {
+        var userId = token.getTokenAttributes().get("sub").toString();
         var response = wishlistService.getWishlistUser(userId);
         return convertToResponse(response);
     }
@@ -133,7 +140,8 @@ public class WishlistController {
                 dto.mainPhoto(),
                 dto.name(),
                 dto.price(),
-                dto.rating()
+                dto.rating(),
+                dto.isClosed()
         );
     }
 

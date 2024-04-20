@@ -2,6 +2,8 @@ package org.hits.backend.hackathon_tusur.rest.subscribe;
 
 import lombok.RequiredArgsConstructor;
 import org.hits.backend.hackathon_tusur.core.subscribe.service.SubscribeService;
+import org.hits.backend.hackathon_tusur.public_interface.user.UserDto;
+import org.hits.backend.hackathon_tusur.rest.user.CommonUserResponse;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +21,7 @@ public class SubscribeController {
     }
 
     @GetMapping("/person/all")
-    public List<UserSubscribeDto> getPersonSubscribers(JwtAuthenticationToken token) {
+    public List<UserDto> getPersonSubscribers(JwtAuthenticationToken token) {
         return subscribeService.getAll(parseUserId(token));
     }
 

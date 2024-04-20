@@ -28,7 +28,8 @@ public class WishlistMapper {
                                         )).orElse(null),
                                 item.name(),
                                 item.price().orElse(null),
-                                item.rating()
+                                item.rating(),
+                                item.isClosed()
                         ))
                         .toList()
         );

@@ -8,12 +8,15 @@ import org.hits.backend.hackathon_tusur.core.subscribe.repository.SubscribeEntit
 import org.hits.backend.hackathon_tusur.core.subscribe.repository.SubscribeRepository;
 import org.hits.backend.hackathon_tusur.core.user.UserEntity;
 import org.hits.backend.hackathon_tusur.core.user.UserRepository;
+import org.hits.backend.hackathon_tusur.core.user.UserService;
 import org.hits.backend.hackathon_tusur.public_interface.affiliate.AffiliateDto;
 import org.hits.backend.hackathon_tusur.public_interface.exception.ExceptionInApplication;
 import org.hits.backend.hackathon_tusur.public_interface.exception.ExceptionType;
+import org.hits.backend.hackathon_tusur.public_interface.user.UserDto;
 import org.hits.backend.hackathon_tusur.rest.subscribe.AffiliateSubscribeDto;
 import org.hits.backend.hackathon_tusur.rest.subscribe.CommandSubscribeDto;
 import org.hits.backend.hackathon_tusur.rest.subscribe.UserSubscribeDto;
+import org.hits.backend.hackathon_tusur.rest.user.CommonUserResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,13 +32,14 @@ public class SubscribeService {
     private final CommandRepository commandRepository;
     private final AffiliateService affiliateService;
     private final UserClient userClient;
+    private final UserService userService;
 
     @Transactional
-    public List<UserSubscribeDto> getAll(String ownerId) {
+    public List<UserDto> getAll(String ownerId) {
         return subscribeRepository.findSubscribers(ownerId)
                 .stream()
                 .map(this::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Transactional
@@ -147,18 +151,8 @@ public class SubscribeService {
         users.forEach(user -> unsubscribePerson(ownerId, user.id()));
     }
 
-    private UserSubscribeDto toDto(SubscribeEntity subscribeEntity) {
-        var user = userClient.getUser(subscribeEntity.subscriberId())
-                .orElseThrow(() -> new ExceptionInApplication("User not found", ExceptionType.NOT_FOUND));
-
-        return new UserSubscribeDto(
-                user.id(),
-                user.username(),
-                user.email(),
-                user.fullName(),
-                user.birthDate(),
-                user.deliveryDateBefore()
-        );
+    private UserDto toDto(SubscribeEntity subscribeEntity) {
+        return userService.getUser(subscribeEntity.subscriberId());
     }
 
     private UserEntity toEntity(SubscribeEntity subscribeEntity) {
