@@ -76,3 +76,12 @@ CREATE TABLE wishlist_item_photo
     FOREIGN KEY (wishlist_item_id) REFERENCES wishlist_item(id)
 );
 -- rollback DROP TABLE wishlist_item_photo;
+
+-- changeset gordey_dovydenko:8
+CREATE TABLE affiliate
+(
+    id VARCHAR(255) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    address VARCHAR(255) NOT NULL
+);
+-- rollback DROP TABLE affiliate;

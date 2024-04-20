@@ -5,17 +5,22 @@ import org.hits.backend.hackathon_tusur.client.RoleClient;
 import org.hits.backend.hackathon_tusur.client.UserClient;
 import org.hits.backend.hackathon_tusur.core.affiliate.AffiliateService;
 import org.hits.backend.hackathon_tusur.core.command.CommandService;
+import org.hits.backend.hackathon_tusur.core.file.FileMetadata;
+import org.hits.backend.hackathon_tusur.core.file.StorageService;
 import org.hits.backend.hackathon_tusur.core.wishlist.WishlistService;
+import org.hits.backend.hackathon_tusur.public_interface.exception.ExceptionInApplication;
+import org.hits.backend.hackathon_tusur.public_interface.exception.ExceptionType;
+import org.hits.backend.hackathon_tusur.public_interface.file.UploadFileDto;
 import org.hits.backend.hackathon_tusur.public_interface.user.CreateUserDto;
 import org.hits.backend.hackathon_tusur.public_interface.user.UpdateUserDto;
 import org.hits.backend.hackathon_tusur.public_interface.user.UserDto;
-import org.hits.backend.hackathon_tusur.public_interface.exception.ExceptionInApplication;
-import org.hits.backend.hackathon_tusur.public_interface.exception.ExceptionType;
 import org.hits.backend.hackathon_tusur.public_interface.wishlist.CreateWishlistDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +31,7 @@ public class UserService {
     private final CommandService commandService;
     private final AffiliateService affiliateService;
     private final WishlistService wishlistService;
+    private final StorageService storageService;
 
     @Transactional
     public String createUser(CreateUserDto dto) {
@@ -59,6 +65,7 @@ public class UserService {
         roleClient.assignRole(oauthId, "ROLE_USER");
         var createWishlistDto = new CreateWishlistDto(oauthId);
         wishlistService.createWishlist(createWishlistDto);
+        savePhoto(dto.photo(), oauthId);
 
         return oauthId;
     }
@@ -75,7 +82,8 @@ public class UserService {
                 commandService.getUserCommands(userId),
                 user.affiliateId().flatMap(affiliateService::getAffiliate),
                 user.deliveryDateBefore(),
-                user.onlineStatus()
+                user.onlineStatus(),
+                storageService.getDownloadLinkByName(String.format("user_%s_photo", userId))
         );
     }
 
@@ -137,6 +145,11 @@ public class UserService {
             }
         }
 
+        if (dto.photo().isPresent()) {
+            deletePhoto(user.id());
+            savePhoto(dto.photo().get(), user.id());
+        }
+
         userRepository.updateUser(newUser);
         userClient.updateUser(dto, user.id());
     }
@@ -147,14 +160,32 @@ public class UserService {
     }
 
     private void checkUserWithUsernameExists(String username) {
-        if (userClient.getUserByUsername(username).isEmpty()) {
+        if (userClient.getUserByUsername(username).isPresent()) {
             throw new ExceptionInApplication("User with this username does not exist", ExceptionType.NOT_FOUND);
         }
     }
 
     private void checkUserWithEmailExists(String email) {
-        if (userClient.getUserByEmail(email).isEmpty()) {
+        if (userClient.getUserByEmail(email).isPresent()) {
             throw new ExceptionInApplication("User with this email does not exist", ExceptionType.NOT_FOUND);
         }
     }
+
+    private void savePhoto(MultipartFile photo, String userID) {
+        var fileMetadata = new FileMetadata(
+                String.format("user_%s_photo", userID),
+                photo.getContentType(),
+                photo.getSize()
+        );
+        var uploadFileDto = new UploadFileDto(
+                fileMetadata,
+                photo
+        );
+        storageService.uploadFile(uploadFileDto).subscribe();
+    }
+
+    private void deletePhoto(String userID) {
+        storageService.deleteFile(String.format("user_%s_photo", userID)).subscribe();
+    }
+
 }

@@ -1,23 +1,30 @@
-package org.hits.backend.hackathon_tusur.rest;
+package org.hits.backend.hackathon_tusur.rest.admin;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.hits.backend.hackathon_tusur.core.affiliate.AffiliateService;
 import org.hits.backend.hackathon_tusur.core.command.CommandService;
 import org.hits.backend.hackathon_tusur.core.user.UserService;
+import org.hits.backend.hackathon_tusur.public_interface.affiliate.AffiliateDto;
 import org.hits.backend.hackathon_tusur.public_interface.affiliate.CreateAffiliateDto;
 import org.hits.backend.hackathon_tusur.public_interface.affiliate.UpdateAffiliateDto;
+import org.hits.backend.hackathon_tusur.public_interface.command.CommandDto;
 import org.hits.backend.hackathon_tusur.public_interface.command.CreateCommandDto;
 import org.hits.backend.hackathon_tusur.public_interface.command.UpdateCommandDto;
 import org.hits.backend.hackathon_tusur.public_interface.user.CreateUserDto;
 import org.hits.backend.hackathon_tusur.public_interface.user.UpdateUserDto;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,7 +34,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RequestMapping("/admin")
 @PreAuthorize("hasRole('ADMIN')")
-@Tag(name = "Test Controller", description = "Test controller for admin")
+@SecurityRequirement(name = "oauth2")
+@Tag(name = "Admin", description = "Test controller for admin")
 public class AdminController {
     private final UserService userService;
     private final AffiliateService affiliateService;
@@ -38,17 +46,19 @@ public class AdminController {
                              @RequestParam("email") String email,
                              @RequestParam("password") String password,
                              @RequestParam("full_name") String fullName,
-                             @RequestParam("birth_date") String birthDate,
+                             @RequestParam("birth_date") @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate birthDate,
                              @RequestParam("affiliate_id") String affiliateId,
-                             @RequestParam("command_id") List<String> commandId) {
+                             @RequestParam("command_id") List<String> commandId,
+                             @RequestParam(required = false) MultipartFile photo) {
         var dto = new CreateUserDto(
                 username,
                 email,
                 password,
                 fullName,
-                LocalDate.parse(birthDate),
+                birthDate,
                 affiliateId,
-                commandId
+                commandId,
+                photo
         );
         return userService.createUser(dto);
     }
@@ -59,10 +69,11 @@ public class AdminController {
                            @RequestParam("email") Optional<String> email,
                            @RequestParam("password") Optional<String> password,
                            @RequestParam("full_name") Optional<String> fullName,
-                           @RequestParam("birth_date") Optional<LocalDate> birthDate,
+                           @RequestParam("birth_date") @DateTimeFormat(pattern = "dd/MM/yyyy") Optional<LocalDate> birthDate,
                            @RequestParam("affiliate_id") Optional<String> affiliateId,
                            @RequestParam("command_id") List<String> commandId,
-                           @RequestParam("delivery_date_before") Optional<Integer> deliveryDateBefore) {
+                           @RequestParam("delivery_date_before") Optional<Integer> deliveryDateBefore,
+                           @RequestParam(required = false) Optional<MultipartFile> photo) {
         var dto = new UpdateUserDto(
                 userId,
                 username,
@@ -72,7 +83,8 @@ public class AdminController {
                 birthDate,
                 affiliateId,
                 commandId,
-                deliveryDateBefore
+                deliveryDateBefore,
+                photo
         );
         userService.updateUser(dto);
     }
@@ -84,10 +96,10 @@ public class AdminController {
 
     @PostMapping("/affiliate")
     public String createAffiliate(@RequestParam("name") String name,
-                                  @RequestParam("description") String description) {
+                                  @RequestParam("address") String address) {
         var dto = new CreateAffiliateDto(
                 name,
-                description
+                address
         );
         return affiliateService.createAffiliate(dto);
     }
@@ -95,11 +107,11 @@ public class AdminController {
     @PutMapping("/affiliate")
     public void updateAffiliate(@RequestParam("affiliate_id") String affiliateId,
                                   @RequestParam("name") String name,
-                                  @RequestParam("description") String description) {
+                                  @RequestParam("address") String address) {
         var dto = new UpdateAffiliateDto(
                 affiliateId,
                 name,
-                description
+                address
         );
         affiliateService.updateAffiliate(dto);
     }
@@ -107,6 +119,14 @@ public class AdminController {
     @DeleteMapping("/affiliate")
     public void deleteAffiliate(@RequestParam("affiliate_id") String affiliateId) {
         affiliateService.deleteAffiliate(affiliateId);
+    }
+
+    @GetMapping("/affiliate")
+    public List<AffiliateResponse> getAffiliates(@RequestParam("affiliate_name") String affiliateName) {
+        var response = affiliateService.getAffiliatesByName(affiliateName);
+        return response.stream()
+                .map(this::mapToAffiliateResponse)
+                .toList();
     }
 
     @PostMapping("/command")
@@ -136,6 +156,14 @@ public class AdminController {
         commandService.deleteCommand(commandId);
     }
 
+    @GetMapping("/command")
+    public List<CommandResponse> getCommands(@RequestParam("command_name") String commandName) {
+        var response = commandService.getCommands(commandName);
+        return response.stream()
+                .map(this::mapToCommandResponse)
+                .toList();
+    }
+
     @PostMapping("/role")
     public void assignRole(@RequestParam("user_id") String userId,
                            @RequestParam("role") String role) {
@@ -148,4 +176,53 @@ public class AdminController {
         userService.removeRole(userId, role);
     }
 
+    @PutMapping("/block")
+    public void blockUser(@RequestParam("user_id") String userId) {
+        userService.blockUser(userId);
+    }
+
+    @PutMapping("/unblock")
+    public void unblockUser(@RequestParam("user_id") String userId) {
+        userService.unblockUser(userId);
+    }
+
+    @PutMapping("/command/{commandId}/assign")
+    public void assignCommandToUser(@RequestParam("user_id") String userId,
+                                    @PathVariable("commandId") String commandId) {
+        commandService.assignCommandToUser(commandId, userId);
+    }
+
+    @PutMapping("/command/{commandId}/unassign")
+    public void unassignCommandFromUser(@RequestParam("user_id") String userId,
+                                        @PathVariable("commandId") String commandId) {
+        commandService.unassignCommandFromUser(commandId, userId);
+    }
+
+    @PutMapping("/affiliate/{affiliateId}/assign")
+    public void assignAffiliateToUser(@RequestParam("user_id") String userId,
+                                    @PathVariable("affiliateId") String affiliateId) {
+        affiliateService.assignAffiliateToUser(affiliateId, userId);
+    }
+
+    @PutMapping("/affiliate/{affiliateId}/unassign")
+    public void unassignAffiliateFromUser(@RequestParam("user_id") String userId,
+                                        @PathVariable("affiliateId") String affiliateId) {
+        affiliateService.unassignAffiliateFromUser(affiliateId, userId);
+    }
+
+    private AffiliateResponse mapToAffiliateResponse(AffiliateDto dto) {
+        return new AffiliateResponse(
+                dto.id(),
+                dto.name(),
+                dto.address()
+        );
+    }
+
+    private CommandResponse mapToCommandResponse(CommandDto dto) {
+        return new CommandResponse(
+                dto.id(),
+                dto.name(),
+                dto.description()
+        );
+    }
 }
