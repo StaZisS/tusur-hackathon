@@ -39,6 +39,12 @@ public class CollectingMoneyService {
     }
 
     @Transactional
+    public void test() {
+        var message = mailFormatter.formatNotificationAboutOpeningWishlist("Даниил Хахулин Константинович", LINK);
+        mailService.sendMessage(message, "ghubman1@gmail.com", "Праздник к нам приходит!");
+    }
+
+    @Transactional
     public void deactivateCollectingMoney() {
         wishlistRepository.getExpiredWishlists()
                 .forEach(item -> wishlistService.deactivateWishlist(item.userId()));
