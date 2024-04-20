@@ -129,7 +129,7 @@ public class WishlistController {
 
     private WishlistResponse convertToResponse(WishlistDto dto) {
         return new WishlistResponse(
-                new CollectingMoneyResponse(),
+                new CollectingMoneyResponse(dto.collectingMoney().downloadLink()),
                 dto.items().stream().map(this::convertToResponse).toList()
         );
     }
