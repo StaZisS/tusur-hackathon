@@ -27,7 +27,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RequestMapping("/admin")
 @PreAuthorize("hasRole('ADMIN')")
-@Tag(name = "Test Controller", description = "Test controller for admin")
+@Tag(name = "Admin", description = "Test controller for admin")
 public class AdminController {
     private final UserService userService;
     private final AffiliateService affiliateService;

@@ -4,12 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.example.hackathon.public_.tables.Wishlist.WISHLIST;
 import static com.example.hackathon.public_.tables.WishlistItem.WISHLIST_ITEM;
 import static com.example.hackathon.public_.tables.WishlistItemPhoto.WISHLIST_ITEM_PHOTO;
+import static com.example.hackathon.public_.tables.Users.USERS;
 
 @Repository
 @RequiredArgsConstructor
@@ -48,6 +50,30 @@ public class WishlistRepositoryImpl implements WishlistRepository {
         return create.selectFrom(WISHLIST)
                 .where(WISHLIST.USER_ID.eq(userId))
                 .fetchOptional(WISHLIST_ENTITY_MAPPER);
+    }
+
+    @Override
+    public Stream<WishlistEntity> getWishlistsBeforeDate(Integer secondsBefore) {
+        return create.select(WISHLIST)
+                .from(WISHLIST)
+                .join(USERS)
+                .on(WISHLIST.USER_ID.eq(USERS.ID))
+                .where(USERS.DATE_BIRTH.minus(secondsBefore).greaterThan(LocalDate.now()))
+                .and(WISHLIST.IS_ACTIVE.isFalse())
+                .fetchStream()
+                .map(record -> WISHLIST_ENTITY_MAPPER.map(record.into(WISHLIST)));
+    }
+
+    @Override
+    public Stream<WishlistEntity> getExpiredWishlists() {
+        return create.select(WISHLIST)
+                .from(WISHLIST)
+                .join(USERS)
+                .on(WISHLIST.USER_ID.eq(USERS.ID))
+                .where(USERS.DATE_BIRTH.lessThan(LocalDate.now()))
+                .and(WISHLIST.IS_ACTIVE.isTrue())
+                .fetchStream()
+                .map(record -> WISHLIST_ENTITY_MAPPER.map(record.into(WISHLIST)));
     }
 
     @Override

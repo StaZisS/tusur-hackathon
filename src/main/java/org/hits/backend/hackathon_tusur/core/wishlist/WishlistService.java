@@ -30,6 +30,7 @@ import java.util.UUID;
 public class WishlistService {
     private final WishlistRepository wishlistRepository;
     private final StorageService storageService;
+    private final WishlistMapper wishlistMapper;
 
     @Transactional
     public String createWishlist(CreateWishlistDto dto) {
@@ -46,12 +47,36 @@ public class WishlistService {
 
     @Transactional
     public void activateWishlist(String wishlistId) {
-        //TODO: это в шедулере будет вызываться
+        var wishlist = wishlistRepository.getWishlistByUserId(wishlistId)
+                .orElseThrow(() -> new ExceptionInApplication("Wishlist not found", ExceptionType.NOT_FOUND));
+        if (wishlist.isActive()) return;
+
+        var entity = new WishlistEntity(
+                wishlist.id(),
+                wishlist.userId(),
+                BigDecimal.ZERO,
+                BigDecimal.ZERO,
+                true,
+                Optional.empty()
+        );
+        wishlistRepository.updateWishlist(entity);
     }
 
     @Transactional
     public void deactivateWishlist(String wishlistId) {
-        //TODO: это в шедулере будет вызываться
+        var wishlist = wishlistRepository.getWishlistByUserId(wishlistId)
+                .orElseThrow(() -> new ExceptionInApplication("Wishlist not found", ExceptionType.NOT_FOUND));
+        if (!wishlist.isActive()) return;
+
+        var entity = new WishlistEntity(
+                wishlist.id(),
+                wishlist.userId(),
+                wishlist.raised(),
+                wishlist.needed(),
+                false,
+                wishlist.downloadLink()
+        );
+        wishlistRepository.updateWishlist(entity);
     }
 
     @Transactional
@@ -137,41 +162,15 @@ public class WishlistService {
     public WishlistDto getWishlistUser(String userId) {
         var wishlist = wishlistRepository.getWishlistByUserId(userId)
                 .orElseThrow(() -> new ExceptionInApplication("Wishlist not found", ExceptionType.NOT_FOUND));
-        return new WishlistDto(
-                new CollectingMoneyDto(),
-                wishlistRepository.getItemsByWishlistId(wishlist.id())
-                        .map(item -> new WishlistItemDto(
-                                wishlistRepository.getMainPhoto(item.id())
-                                        .map(photoId -> new FileWithLinkDto(
-                                                photoId,
-                                                storageService.getDownloadLinkByName(photoId)
-                                        )).orElse(null),
-                                item.name(),
-                                item.price().orElse(null),
-                                item.rating()
-                        ))
-                        .toList()
-        );
+
+        return wishlistMapper.toDto(wishlist);
     }
 
     public WishlistItemFullDto getWishlistItem(String itemId) {
         var item = wishlistRepository.getItemById(itemId)
                 .orElseThrow(() -> new ExceptionInApplication("Item not found", ExceptionType.NOT_FOUND));
-        return new WishlistItemFullDto(
-                item.id(),
-                item.name(),
-                item.price().orElse(null),
-                item.comment().orElse(null),
-                item.link().orElse(null),
-                item.rating(),
-                item.isClosed(),
-                wishlistRepository.getItemsPhotos(itemId)
-                        .map(photoId -> new FileWithLinkDto(
-                                photoId,
-                                storageService.getDownloadLinkByName(photoId)
-                        ))
-                        .toList()
-        );
+
+        return wishlistMapper.toDto(item);
     }
 
     private void savePhoto(MultipartFile[] photos, String itemId) {

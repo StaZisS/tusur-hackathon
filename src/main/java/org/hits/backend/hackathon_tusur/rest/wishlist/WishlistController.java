@@ -28,7 +28,7 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/wishlist")
-@Tag(name = "Test Controller", description = "Test controller for working with wishlist")
+@Tag(name = "Wishlist", description = "Test controller for working with wishlist")
 public class WishlistController {
     private final WishlistService wishlistService;
 
