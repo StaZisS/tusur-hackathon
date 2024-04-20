@@ -14,6 +14,7 @@ import org.hits.backend.hackathon_tusur.public_interface.wishlist.RemovePhotoToW
 import org.hits.backend.hackathon_tusur.public_interface.wishlist.UpdateItemInWishListDto;
 import org.hits.backend.hackathon_tusur.public_interface.wishlist.WishlistDto;
 import org.hits.backend.hackathon_tusur.public_interface.wishlist.WishlistItemFullDto;
+import org.hits.backend.hackathon_tusur.rest.wishlist.AddWishListLinkDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,6 +41,25 @@ public class WishlistService {
                 Optional.empty()
         );
         return wishlistRepository.createWishlist(entity);
+    }
+
+    @Transactional
+    public void updateLink(AddWishListLinkDto dto, String userId) {
+        var wishlist = wishlistRepository.getWishlistByUserId(userId)
+                .orElseThrow(() -> new ExceptionInApplication("Wishlist not found", ExceptionType.NOT_FOUND));
+        if (!userId.equals(wishlist.userId())) {
+            throw new ExceptionInApplication("You can't update link from another wishlist", ExceptionType.FORBIDDEN);
+        }
+
+        var entity = new WishlistEntity(
+                wishlist.id(),
+                wishlist.userId(),
+                wishlist.raised(),
+                wishlist.needed(),
+                wishlist.isActive(),
+                Optional.ofNullable(dto.link())
+        );
+        wishlistRepository.updateWishlist(entity);
     }
 
     @Transactional
@@ -127,7 +147,7 @@ public class WishlistService {
                 dto.comment().isPresent() ? dto.comment() : item.comment(),
                 dto.link().isPresent() ? dto.link() : item.link(),
                 dto.rating().orElse(item.rating()),
-                item.isClosed()
+                dto.isClosed().orElse(item.isClosed())
         );
         wishlistRepository.updateItemsInWishlist(newItem);
     }

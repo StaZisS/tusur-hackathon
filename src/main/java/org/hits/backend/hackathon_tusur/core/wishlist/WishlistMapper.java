@@ -20,6 +20,7 @@ public class WishlistMapper {
                 new CollectingMoneyDto(),
                 wishlistRepository.getItemsByWishlistId(entity.id())
                         .map(item -> new WishlistItemDto(
+                                item.id(),
                                 wishlistRepository.getMainPhoto(item.id())
                                         .map(photoId -> new FileWithLinkDto(
                                                 photoId,

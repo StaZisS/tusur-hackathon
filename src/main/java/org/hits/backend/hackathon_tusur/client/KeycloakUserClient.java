@@ -56,6 +56,7 @@ public class KeycloakUserClient implements UserClient {
                 log.error("Error creating user: {}", response.getEntity());
                 throw new ExceptionInApplication("Error creating user", ExceptionType.INVALID);
             }
+
             return CreatedResponseUtil.getCreatedId(response);
         }
     }

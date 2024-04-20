@@ -15,6 +15,7 @@ import org.hits.backend.hackathon_tusur.public_interface.command.UpdateCommandDt
 import org.hits.backend.hackathon_tusur.public_interface.user.CreateUserDto;
 import org.hits.backend.hackathon_tusur.public_interface.user.UpdateUserDto;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,7 +42,7 @@ public class AdminController {
     private final AffiliateService affiliateService;
     private final CommandService commandService;
 
-    @PostMapping("/user")
+    @PostMapping(path = "/user", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String createUser(@RequestParam("username") String username,
                              @RequestParam("email") String email,
                              @RequestParam("password") String password,

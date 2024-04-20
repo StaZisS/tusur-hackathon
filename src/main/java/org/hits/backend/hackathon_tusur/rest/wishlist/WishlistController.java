@@ -13,14 +13,7 @@ import org.hits.backend.hackathon_tusur.public_interface.wishlist.WishlistDto;
 import org.hits.backend.hackathon_tusur.public_interface.wishlist.WishlistItemDto;
 import org.hits.backend.hackathon_tusur.public_interface.wishlist.WishlistItemFullDto;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
@@ -71,6 +64,7 @@ public class WishlistController {
                                     @RequestParam(value = "link", required = false) Optional<String> link,
                                     @RequestParam(value = "comment", required = false) Optional<String> comment,
                                     @RequestParam(value = "rating", required = false) Optional<Integer> rating,
+                                    @RequestParam(value = "isClosed", required = false) Optional<Boolean> isClosed,
                                     JwtAuthenticationToken token) {
         var dto = new UpdateItemInWishListDto(
                 itemId,
@@ -79,9 +73,16 @@ public class WishlistController {
                 price,
                 link,
                 comment,
-                rating
+                rating,
+                isClosed
         );
         wishlistService.updateItemInWishlist(dto);
+    }
+
+    @PatchMapping("/link")
+    public void updateLink(@RequestBody AddWishListLinkDto dto, JwtAuthenticationToken token) {
+        var userId = token.getTokenAttributes().get("sub").toString();
+        wishlistService.updateLink(dto, userId);
     }
 
     @PostMapping("/item/{itemId}/photo")
@@ -128,6 +129,7 @@ public class WishlistController {
 
     private WishlistItemResponse convertToResponse(WishlistItemDto dto) {
         return new WishlistItemResponse(
+                dto.id(),
                 dto.mainPhoto(),
                 dto.name(),
                 dto.price(),
