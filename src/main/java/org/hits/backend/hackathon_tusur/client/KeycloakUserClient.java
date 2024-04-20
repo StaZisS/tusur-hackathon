@@ -86,7 +86,7 @@ public class KeycloakUserClient implements UserClient {
             userRepresentation.getAttributes().put("fullName", List.of(dto.fullName().get()));
         }
         if (dto.birthDate().isPresent()) {
-            userRepresentation.getAttributes().put("birthDate", List.of(dto.birthDate().get().toString()));
+            userRepresentation.getAttributes().put("birthDate", List.of(dto.birthDate().get().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"))));
         }
         if (dto.password().isPresent()) {
             CredentialRepresentation passwordCred = new CredentialRepresentation();

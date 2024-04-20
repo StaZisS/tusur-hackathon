@@ -37,7 +37,7 @@ public class WishlistController {
                                     JwtAuthenticationToken token) {
         var dto = new AddItemToWishlistDto(
                 token.getTokenAttributes().get("sub").toString(),
-                photos,
+                photos == null ? new MultipartFile[0] : photos,
                 name,
                 price,
                 link,

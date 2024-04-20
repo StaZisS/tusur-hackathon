@@ -34,7 +34,7 @@ public class CommandService {
 
     @Transactional
     public void updateCommand(UpdateCommandDto dto) {
-        var command = commandRepository.getCommandByName(dto.name())
+        var command = commandRepository.getCommandById(dto.id())
                 .orElseThrow(() -> new ExceptionInApplication("Command with name " + dto.name() + " not found", ExceptionType.NOT_FOUND));
 
         commandRepository.updateCommand(new CommandEntity(
