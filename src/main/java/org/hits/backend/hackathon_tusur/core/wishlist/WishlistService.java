@@ -70,8 +70,8 @@ public class WishlistService {
     }
 
     @Transactional
-    public void activateWishlist(String wishlistId) {
-        var wishlist = wishlistRepository.getWishlistByUserId(wishlistId)
+    public void activateWishlist(String userId) {
+        var wishlist = wishlistRepository.getWishlistByUserId(userId)
                 .orElseThrow(() -> new ExceptionInApplication("Wishlist not found", ExceptionType.NOT_FOUND));
         if (wishlist.isActive()) return;
 
@@ -87,8 +87,8 @@ public class WishlistService {
     }
 
     @Transactional
-    public void deactivateWishlist(String wishlistId) {
-        var wishlist = wishlistRepository.getWishlistByUserId(wishlistId)
+    public void deactivateWishlist(String userId) {
+        var wishlist = wishlistRepository.getWishlistByUserId(userId)
                 .orElseThrow(() -> new ExceptionInApplication("Wishlist not found", ExceptionType.NOT_FOUND));
         if (!wishlist.isActive()) return;
 
