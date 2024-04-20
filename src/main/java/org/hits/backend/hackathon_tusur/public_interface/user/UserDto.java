@@ -16,6 +16,7 @@ public record UserDto(
         List<CommandDto> commands,
         Optional<AffiliateDto> affiliate,
         Integer deliveryDateBefore,
-        Boolean onlineStatus
+        Boolean onlineStatus,
+        String photoUrl
 ) {
 }

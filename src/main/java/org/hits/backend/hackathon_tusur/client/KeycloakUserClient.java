@@ -16,6 +16,7 @@ import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +43,7 @@ public class KeycloakUserClient implements UserClient {
         userRepresentation.setEmailVerified(false);
         userRepresentation.setEnabled(true);
         userRepresentation.setAttributes(Map.of(
-                "birthDate", List.of(entity.birthDate().toString()),
+                "birthDate", List.of(entity.birthDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))),
                 "fullName", List.of(entity.fullName())
         ));
         userRepresentation.setCredentials(List.of(passwordCred));

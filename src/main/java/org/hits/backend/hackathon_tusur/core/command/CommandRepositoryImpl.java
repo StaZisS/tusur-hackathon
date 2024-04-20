@@ -1,7 +1,9 @@
 package org.hits.backend.hackathon_tusur.core.command;
 
 import lombok.RequiredArgsConstructor;
+import org.jooq.Condition;
 import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -40,7 +42,7 @@ public class CommandRepositoryImpl implements CommandRepository {
     @Override
     public Stream<CommandEntity> getCommands(String commandName) {
         return create.selectFrom(COMMAND)
-                .where(COMMAND.NAME.eq(commandName))
+                .where(COMMAND.NAME.contains(commandName))
                 .fetchStream()
                 .map(COMMAND_ENTITY_MAPPER::map);
     }
@@ -70,8 +72,12 @@ public class CommandRepositoryImpl implements CommandRepository {
 
     @Override
     public Optional<CommandEntity> getCommandByName(String commandName) {
+        Condition condition = DSL.trueCondition();
+        if (!commandName.isBlank()) {
+            condition = condition.and(COMMAND.NAME.eq(commandName));
+        }
         return create.selectFrom(COMMAND)
-                .where(COMMAND.NAME.eq(commandName))
+                .where(condition)
                 .fetchOptional(COMMAND_ENTITY_MAPPER);
     }
 

@@ -38,9 +38,13 @@ hits-project:
       uri: ${KEYCLOAK_URI:http://51.250.30.109:8082}
 
 authServer:
-  authorizationUrl: http://localhost:8082/realms/hits-project/protocol/openid-connect/auth
-  tokenUrl: http://localhost:8082/realms/hits-project/protocol/openid-connect/token
-  refreshUrl: http://localhost:8082/realms/hits-project/protocol/openid-connect/token
+  authorizationUrl: http://51.250.30.109:8082/realms/hits-project/protocol/openid-connect/auth
+  tokenUrl: http://51.250.30.109:8082/realms/hits-project/protocol/openid-connect/token
+  refreshUrl: http://51.250.30.109:8082/realms/hits-project/protocol/openid-connect/token
+
+logging:
+  level:
+    org.springframework.security: trace
 
 server:
   port: 8080
