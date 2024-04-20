@@ -3,6 +3,7 @@ package org.hits.backend.hackathon_tusur.websocket.chat.v1;
 import lombok.RequiredArgsConstructor;
 import org.hits.backend.hackathon_tusur.core.message.repository.MessageEntity;
 import org.hits.backend.hackathon_tusur.core.message.service.MessageService;
+import org.hits.backend.hackathon_tusur.core.user.UserService;
 import org.hits.backend.hackathon_tusur.public_interface.message.CreateMessageDto;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Controller;
 @Controller
 @RequiredArgsConstructor
 public class ChatController {
+    private final UserService userService;
     private final SimpMessagingTemplate messagingTemplate;
     private final MessageService messageService;
 
@@ -25,7 +27,10 @@ public class ChatController {
 
         MessageEntity messageEntity = messageService.save(createMessageDto);
 
-        var response = new ResponseMessageDto(messageEntity.messageId(), messageEntity.senderId(), messageEntity.chatRoomId(), messageEntity.content(), false);
+        var sender = userService.getUser(senderId);
+
+        var response = new ResponseMessageDto(messageEntity.messageId(), messageEntity.senderId(), messageEntity.chatRoomId(),
+                messageEntity.content(), false, sender.fullName(), sender.photoUrl());
 
         messagingTemplate.convertAndSend("/topic/" + messageEntity.chatRoomId() + "/messages", response);
     }

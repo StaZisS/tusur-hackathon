@@ -7,6 +7,8 @@ public record ResponseMessageDto(
         String senderId,
         String receiverId,
         String content,
-        boolean isNotification
+        boolean isNotification,
+        String fullName,
+        String photoUrl
 ) {
 }

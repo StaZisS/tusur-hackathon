@@ -3,10 +3,10 @@ package org.hits.backend.hackathon_tusur.core.wishlist;
 import lombok.RequiredArgsConstructor;
 import org.hits.backend.hackathon_tusur.core.file.StorageService;
 import org.hits.backend.hackathon_tusur.public_interface.file.FileWithLinkDto;
-import org.hits.backend.hackathon_tusur.public_interface.wishlist.CollectingMoneyDto;
 import org.hits.backend.hackathon_tusur.public_interface.wishlist.WishlistDto;
 import org.hits.backend.hackathon_tusur.public_interface.wishlist.WishlistItemDto;
 import org.hits.backend.hackathon_tusur.public_interface.wishlist.WishlistItemFullDto;
+import org.hits.backend.hackathon_tusur.rest.wishlist.CollectingMoneyResponse;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -17,7 +17,7 @@ public class WishlistMapper {
 
     public WishlistDto toDto(WishlistEntity entity) {
         return new WishlistDto(
-                new CollectingMoneyDto(),
+                new CollectingMoneyResponse(entity.downloadLink().orElse(null)),
                 wishlistRepository.getItemsByWishlistId(entity.id())
                         .map(item -> new WishlistItemDto(
                                 item.id(),
@@ -30,6 +30,7 @@ public class WishlistMapper {
                                 item.price().orElse(null),
                                 item.rating(),
                                 item.isClosed()
+
                         ))
                         .toList()
         );
