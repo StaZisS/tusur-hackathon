@@ -19,11 +19,4 @@ spring:
 
 amazonProperties:
   endpointUrl: https://storage.yandexcloud.net
-  bucketName: hackathon-perm-cup-bucket
-
-yandexApi:
-  speechUri: https://transcribe.api.cloud.yandex.net
-  operationUri: https://operation.api.cloud.yandex.net
-  token: AQVNx1tbPR0KCm51us0xl5MpmqKEVf62k2lBCfpg
-  speechEndpoint: /speech/stt/v2/longRunningRecognize
-  statusEndpoint: /operations/{id}
+  bucketName: hackathon-tinkoff-birthdate-bucket

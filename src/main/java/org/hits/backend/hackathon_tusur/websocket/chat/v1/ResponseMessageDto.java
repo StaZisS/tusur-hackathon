@@ -1,9 +1,11 @@
 package org.hits.backend.hackathon_tusur.websocket.chat.v1;
 
-import java.time.OffsetDateTime;
+import java.util.UUID;
 
 public record ResponseMessageDto(
-        String message,
-        String dateTime
+        UUID messageId,
+        String senderId,
+        String receiverId,
+        String content
 ) {
 }
