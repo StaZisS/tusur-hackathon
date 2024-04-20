@@ -22,6 +22,13 @@ public class WishlistRepositoryImpl implements WishlistRepository {
     private final DSLContext create;
 
     @Override
+    public WishlistEntity getWishList(String wishListId) {
+        return create.selectFrom(WISHLIST)
+                .where(WISHLIST.ID.eq(wishListId))
+                .fetchOne(WISHLIST_ENTITY_MAPPER);
+    }
+
+    @Override
     public String createWishlist(WishlistEntity entity) {
         return create.insertInto(WISHLIST)
                 .set(WISHLIST.ID, entity.id())

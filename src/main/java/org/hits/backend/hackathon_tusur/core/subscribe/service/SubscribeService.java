@@ -39,6 +39,14 @@ public class SubscribeService {
     }
 
     @Transactional
+    public List<UserEntity> getAllSubscribedUser(String ownerId) {
+        return subscribeRepository.findSubscribers(ownerId)
+                .stream()
+                .map(this::toEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
     public void subscribePerson(String ownerId, String subscriberId) {
         userClient.getUser(subscriberId)
                 .orElseThrow(() -> new ExceptionInApplication("User not found", ExceptionType.NOT_FOUND));
@@ -151,5 +159,10 @@ public class SubscribeService {
                 user.birthDate(),
                 user.deliveryDateBefore()
         );
+    }
+
+    private UserEntity toEntity(SubscribeEntity subscribeEntity) {
+        return userRepository.getUserById(subscribeEntity.subscriberId())
+                .orElseThrow(() -> new ExceptionInApplication("User not found", ExceptionType.NOT_FOUND));
     }
 }
