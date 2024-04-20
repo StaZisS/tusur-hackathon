@@ -6,6 +6,7 @@ public record ResponseMessageDto(
         UUID messageId,
         String senderId,
         String receiverId,
-        String content
+        String content,
+        boolean isNotification
 ) {
 }

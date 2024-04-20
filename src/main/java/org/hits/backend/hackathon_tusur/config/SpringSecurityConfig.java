@@ -24,6 +24,7 @@ public class SpringSecurityConfig {
     private static final String[] WHITE_LIST = {
             "/swagger-ui/**",
             "/v3/api-docs/**",
+            "/ws/**"
     };
 
     @Bean
@@ -33,9 +34,9 @@ public class SpringSecurityConfig {
                 .csrf(CsrfConfigurer::disable)
                 .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(c -> c.requestMatchers(WHITE_LIST).permitAll()
-                        .anyRequest().permitAll()//.access(customAuthManager())
-                );
-                //.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
+                        .anyRequest().access(customAuthManager())
+                )
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
         return http.build();
     }
 

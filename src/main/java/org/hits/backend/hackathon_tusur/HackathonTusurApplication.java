@@ -32,7 +32,7 @@ https://stackoverflow.com/questions/38337895/globally-disable-https-keycloak
       - KC_HOSTNAME_STRICT=true
       - KC_HTTP_ENABLED=true
       - KC_HTTPS_ENABLED=false
-      - KC_HOSTNAME=51.250.30.109
+      - KC_HOSTNAME=158.160.75.21
     networks:
       - app
 

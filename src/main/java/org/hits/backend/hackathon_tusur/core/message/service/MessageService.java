@@ -8,8 +8,9 @@ import org.hits.backend.hackathon_tusur.core.user.UserRepository;
 import org.hits.backend.hackathon_tusur.public_interface.exception.ExceptionInApplication;
 import org.hits.backend.hackathon_tusur.public_interface.exception.ExceptionType;
 import org.hits.backend.hackathon_tusur.rest.message.MessageDto;
-import org.hits.backend.hackathon_tusur.websocket.chat.v1.RequestMessageDto;
+import org.hits.backend.hackathon_tusur.public_interface.message.CreateMessageDto;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -21,7 +22,8 @@ public class MessageService {
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
 
-    public MessageEntity save(RequestMessageDto messageDto) {
+    @Transactional
+    public MessageEntity save(CreateMessageDto messageDto) {
         var recipientUser = userRepository.getUserById(messageDto.recipientId())
                 .orElseThrow(() -> new ExceptionInApplication("User not found", ExceptionType.NOT_FOUND));
 
@@ -29,10 +31,18 @@ public class MessageService {
                 .orElseThrow(() -> new ExceptionInApplication("User not found", ExceptionType.NOT_FOUND));
 
         var chatRoomEntity = chatRoomService.getChatRoomId(recipientUser.id());
+        String chatRoomId;
+
+        if (chatRoomEntity.isEmpty()) {
+            var createdChatRoomEntity = chatRoomService.createChatRoom(recipientUser.id(),"Chat with " + recipientUser.username(), "Chat with " + recipientUser.username());
+            chatRoomId = createdChatRoomEntity.chatRoomId();
+        } else {
+            chatRoomId = chatRoomEntity.get().chatRoomId();
+        }
 
         var messageEntity = MessageEntity.builder()
                 .createdAt(OffsetDateTime.now())
-                .chatRoomId(chatRoomEntity.chatRoomId())
+                .chatRoomId(chatRoomId)
                 .senderId(senderUser.id())
                 .content(messageDto.content())
                 .build();
@@ -40,6 +50,7 @@ public class MessageService {
         return messageRepository.save(messageEntity);
     }
 
+    @Transactional
     public List<MessageDto> findChatMessages(String chatRoomId) {
         return messageRepository.findChatMessages(chatRoomId)
                 .stream()

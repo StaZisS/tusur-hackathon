@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.example.hackathon.public_.tables.Users.USERS;
@@ -48,5 +49,18 @@ public class UserRepositoryImpl implements UserRepository {
         return create.selectFrom(USERS)
                 .where(USERS.ID.eq(userId))
                 .fetchOptional(USER_ENTITY_MAPPER);
+    }
+
+    @Override
+    public List<UserEntity> getAllUsers() {
+        return create.selectFrom(USERS)
+                .fetch(USER_ENTITY_MAPPER);
+    }
+
+    @Override
+    public List<UserEntity> getAllUsersByAffiliateId(String affiliateId) {
+        return create.selectFrom(USERS)
+                .where(USERS.AFFILIATE_ID.eq(affiliateId))
+                .fetch(USER_ENTITY_MAPPER);
     }
 }

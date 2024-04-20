@@ -50,6 +50,7 @@ public class AdminController {
                 affiliateId,
                 commandId
         );
+
         return userService.createUser(dto);
     }
 

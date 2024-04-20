@@ -63,7 +63,7 @@ public class UserService {
         return oauthId;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public UserDto getUser(String userId) {
         var user = getUserEntity(userId);
         return new UserDto(
@@ -147,13 +147,13 @@ public class UserService {
     }
 
     private void checkUserWithUsernameExists(String username) {
-        if (userClient.getUserByUsername(username).isEmpty()) {
+        if (userClient.getUserByUsername(username).isPresent()) {
             throw new ExceptionInApplication("User with this username does not exist", ExceptionType.NOT_FOUND);
         }
     }
 
     private void checkUserWithEmailExists(String email) {
-        if (userClient.getUserByEmail(email).isEmpty()) {
+        if (userClient.getUserByEmail(email).isPresent()) {
             throw new ExceptionInApplication("User with this email does not exist", ExceptionType.NOT_FOUND);
         }
     }

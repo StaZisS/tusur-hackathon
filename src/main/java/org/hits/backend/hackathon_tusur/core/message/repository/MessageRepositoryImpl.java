@@ -17,7 +17,6 @@ public class MessageRepositoryImpl implements MessageRepository {
     @Override
     public MessageEntity save(MessageEntity messageEntity) {
         return create.insertInto(MESSAGE)
-                .set(MESSAGE.MESSAGE_ID, messageEntity.messageId())
                 .set(MESSAGE.CHAT_ROOM_ID, messageEntity.chatRoomId())
                 .set(MESSAGE.SENDER_ID, messageEntity.senderId())
                 .set(MESSAGE.CONTENT, messageEntity.content())
