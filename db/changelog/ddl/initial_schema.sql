@@ -42,7 +42,7 @@ CREATE TABLE command
 INSERT INTO command (id, name, description) VALUES ('529c8fa4-b527-4516-a468-d3d6b571f818', 'Tinkoff SRE', 'Команда быстрого реагирования');
 INSERT INTO command (id, name, description) VALUES ('179c8fa4-b527-4516-a468-d3d6b521f818', 'Tinkoff Backend', 'Делаем высоконагруженные сервисы');
 INSERT INTO command (id, name, description) VALUES ('279c8fa4-b527-4516-a468-d3d6b551f818', 'Tinkoff Frontend', 'Создаем красоту для Вас');
-INSERT INTO command (id, name, description) VALUES ('279c8fa4-b527-4516-a468-d3d6b551f818', 'Tinkoff HR', 'Самая дружная команда');
+INSERT INTO command (id, name, description) VALUES ('679c8fa4-b527-4516-a468-d3d6b551f819', 'Tinkoff HR', 'Самая дружная команда');
 
 -- rollback DROP TABLE command;
 
