@@ -32,14 +32,14 @@ public class CollectingMoneyService {
                     var message = mailFormatter.formatNotificationAboutOpeningWishlist(wishlistMapper.toDto(item));
                     //TODO: получить все почты которые причастны к этому пользователю
                     List<UserEntity> users = subscribeService.getAllSubscribedUser(item.userId());
-                    users.forEach(user -> mailService.sendMessage("Новый сбор средств", user.email(), "Праздник к нам приходит!"));
-                    wishlistService.activateWishlist(item.id());
+                    users.forEach(user -> mailService.sendMessage(message, user.email(), "Праздник к нам приходит!"));
+                    wishlistService.activateWishlist(item.userId());
                 });
     }
 
     @Transactional
     public void deactivateCollectingMoney() {
         wishlistRepository.getExpiredWishlists()
-                .forEach(item -> wishlistService.deactivateWishlist(item.id()));
+                .forEach(item -> wishlistService.deactivateWishlist(item.userId()));
     }
 }
