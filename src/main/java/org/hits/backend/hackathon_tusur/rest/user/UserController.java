@@ -56,9 +56,11 @@ public class UserController {
     }
 
     @GetMapping
-    public List<CommonUserResponse> getUsers(@RequestParam("user_full_name") String userFullName) {
+    public List<CommonUserResponse> getUsers(JwtAuthenticationToken token, @RequestParam("user_full_name") String userFullName) {
+        var myId = token.getTokenAttributes().get("sub").toString();
         List<UserDto> response = userService.getUsersByName(userFullName);
         return response.stream()
+                .filter(user -> !user.id().equals(myId))
                 .map(this::mapToCommonUserResponse)
                 .toList();
     }

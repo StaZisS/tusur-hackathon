@@ -3,9 +3,12 @@ package org.hits.backend.hackathon_tusur.core.wishlist;
 import lombok.RequiredArgsConstructor;
 import org.hits.backend.hackathon_tusur.core.file.FileMetadata;
 import org.hits.backend.hackathon_tusur.core.file.StorageService;
+import org.hits.backend.hackathon_tusur.core.message.repository.MessageEntity;
+import org.hits.backend.hackathon_tusur.core.message.service.MessageService;
 import org.hits.backend.hackathon_tusur.public_interface.exception.ExceptionInApplication;
 import org.hits.backend.hackathon_tusur.public_interface.exception.ExceptionType;
 import org.hits.backend.hackathon_tusur.public_interface.file.UploadFileDto;
+import org.hits.backend.hackathon_tusur.public_interface.message.CreateMessageDto;
 import org.hits.backend.hackathon_tusur.public_interface.wishlist.AddItemToWishlistDto;
 import org.hits.backend.hackathon_tusur.public_interface.wishlist.AddPhotoToWishlistItemDto;
 import org.hits.backend.hackathon_tusur.public_interface.wishlist.CreateWishlistDto;
@@ -32,6 +35,7 @@ public class WishlistService {
     private final StorageService storageService;
     private final SimpMessagingTemplate messagingTemplate;
     private final WishlistMapper wishlistMapper;
+    private final MessageService messageService;
 
     @Transactional
     public String createWishlist(CreateWishlistDto dto) {
@@ -160,7 +164,12 @@ public class WishlistService {
         wishlistRepository.updateItemsInWishlist(newItem);
 
         if (dto.isClosed().isPresent()) {
-            var response = new ResponseMessageDto(UUID.randomUUID(), "", wishlist.userId(), newItem.name(), true);
+            var content = "Пользователь " + dto.userId() + " отметил подарок " + newItem.name() + " как купленный";
+
+            var createMessageDto = new CreateMessageDto(dto.userId(), wishlist.userId(), content);
+            MessageEntity messageEntity = messageService.save(createMessageDto);
+            var response = new ResponseMessageDto(messageEntity.messageId(), messageEntity.senderId(), wishlist.userId(),
+                    content, true, "", "");
             messagingTemplate.convertAndSend("/topic/" + wishlist.userId() + "/messages", response);
         }
     }
