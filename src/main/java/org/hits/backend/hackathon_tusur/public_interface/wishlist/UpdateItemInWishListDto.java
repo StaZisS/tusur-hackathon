@@ -10,6 +10,7 @@ public record UpdateItemInWishListDto(
         Optional<BigDecimal> price,
         Optional<String> link,
         Optional<String> comment,
-        Optional<Integer> rating
+        Optional<Integer> rating,
+        Optional<Boolean> isClosed
 ) {
 }

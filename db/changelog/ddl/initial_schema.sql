@@ -13,6 +13,7 @@ CREATE TABLE users
     affiliate_id         VARCHAR(255),
     online_status        BOOLEAN NOT NULL
 );
+
 -- rollback DROP TABLE users;
 
 -- changeset gordey_dovydenko:2
