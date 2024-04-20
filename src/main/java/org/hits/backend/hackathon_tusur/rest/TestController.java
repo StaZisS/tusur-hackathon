@@ -17,7 +17,7 @@ public class TestController {
 
     @Operation(summary = "Admin role")
     @GetMapping("/admin")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     @SecurityRequirement(name = "oauth2")
     public String admin() {
         return "Hello, admin!";
@@ -25,8 +25,8 @@ public class TestController {
 
     @Operation(summary = "User role")
     @GetMapping("/user")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @SecurityRequirement(name = "oauth2")
+    //@PreAuthorize("hasRole('ROLE_USER')")
+    //@SecurityRequirement(name = "oauth2")
     public String user() {
         return "Hello, user!";
     }
