@@ -97,7 +97,7 @@ public class WishlistController {
         wishlistService.addPhotoToItem(dto);
     }
 
-    @DeleteMapping("/item/{itemId}/photo")
+    @PutMapping("/item/{itemId}/photo")
     public void removePhotoFromItem(@RequestParam(value = "photoIds") String[] photoIds,
                                     @PathVariable(value = "itemId") String itemId,
                                     JwtAuthenticationToken token) {
