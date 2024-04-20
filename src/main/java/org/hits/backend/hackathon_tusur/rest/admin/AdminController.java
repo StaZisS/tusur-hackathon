@@ -121,14 +121,6 @@ public class AdminController {
         affiliateService.deleteAffiliate(affiliateId);
     }
 
-    @GetMapping("/affiliate")
-    public List<AffiliateResponse> getAffiliates(@RequestParam("affiliate_name") String affiliateName) {
-        var response = affiliateService.getAffiliatesByName(affiliateName);
-        return response.stream()
-                .map(this::mapToAffiliateResponse)
-                .toList();
-    }
-
     @PostMapping("/command")
     public String createCommand(@RequestParam("name") String name,
                                 @RequestParam("description") String description) {
@@ -154,14 +146,6 @@ public class AdminController {
     @DeleteMapping("/command")
     public void deleteCommand(@RequestParam("command_id") String commandId) {
         commandService.deleteCommand(commandId);
-    }
-
-    @GetMapping("/command")
-    public List<CommandResponse> getCommands(@RequestParam("command_name") String commandName) {
-        var response = commandService.getCommands(commandName);
-        return response.stream()
-                .map(this::mapToCommandResponse)
-                .toList();
     }
 
     @PostMapping("/role")
@@ -208,21 +192,5 @@ public class AdminController {
     public void unassignAffiliateFromUser(@RequestParam("user_id") String userId,
                                         @PathVariable("affiliateId") String affiliateId) {
         affiliateService.unassignAffiliateFromUser(affiliateId, userId);
-    }
-
-    private AffiliateResponse mapToAffiliateResponse(AffiliateDto dto) {
-        return new AffiliateResponse(
-                dto.id(),
-                dto.name(),
-                dto.address()
-        );
-    }
-
-    private CommandResponse mapToCommandResponse(CommandDto dto) {
-        return new CommandResponse(
-                dto.id(),
-                dto.name(),
-                dto.description()
-        );
     }
 }

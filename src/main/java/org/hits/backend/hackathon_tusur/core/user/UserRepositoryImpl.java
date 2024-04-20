@@ -1,10 +1,13 @@
 package org.hits.backend.hackathon_tusur.core.user;
 
 import lombok.RequiredArgsConstructor;
+import org.jooq.Condition;
 import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static com.example.hackathon.public_.tables.Users.USERS;
 

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -152,6 +153,23 @@ public class UserService {
 
         userRepository.updateUser(newUser);
         userClient.updateUser(dto, user.id());
+    }
+
+    public List<UserDto> getUsersByName(String userName) {
+        return userClient.getUsersByName(userName)
+                .map(user -> new UserDto(
+                        user.id(),
+                        user.username(),
+                        user.email(),
+                        user.fullName(),
+                        user.birthDate(),
+                        commandService.getUserCommands(user.id()),
+                        user.affiliateId().flatMap(affiliateService::getAffiliate),
+                        user.deliveryDateBefore(),
+                        user.onlineStatus(),
+                        storageService.getDownloadLinkByName(String.format("user_%s_photo", user.id()))
+                ))
+                .toList();
     }
 
     private UserEntity getUserEntity(String userId) {
