@@ -1,6 +1,7 @@
 package org.hits.backend.hackathon_tusur.core.subscribe.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.hits.backend.hackathon_tusur.client.UserClient;
 import org.hits.backend.hackathon_tusur.core.affiliate.AffiliateService;
 import org.hits.backend.hackathon_tusur.core.command.CommandRepository;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SubscribeService {
@@ -54,9 +56,11 @@ public class SubscribeService {
     public void subscribePerson(String ownerId, String subscriberId) {
         userClient.getUser(subscriberId)
                 .orElseThrow(() -> new ExceptionInApplication("User not found", ExceptionType.NOT_FOUND));
+        log.info("Subscribing user {} to user {}", ownerId, subscriberId);
 
         var subscribeEntity = new SubscribeEntity(ownerId, subscriberId);
         subscribeRepository.save(subscribeEntity);
+        log.info("User {} subscribed to user {}", ownerId, subscriberId);
     }
 
     @Transactional
