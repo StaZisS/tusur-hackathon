@@ -15,11 +15,6 @@ public class CollectingMoneyScheduler {
         collectingMoneyService.activateCollectingMoney();
     }
 
-    @Scheduled(fixedRate = 1000)
-    public void test() {
-        collectingMoneyService.test();
-    }
-
     @Scheduled(cron = "0 * * * * *")
     public void deactivateCollectingMoney() {
         collectingMoneyService.deactivateCollectingMoney();
