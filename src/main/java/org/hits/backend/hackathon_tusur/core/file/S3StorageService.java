@@ -34,10 +34,7 @@ public class S3StorageService implements StorageService {
         return Mono.fromRunnable(() -> {
             var file = dto.file();
             var metadata = dto.metadata();
-            try (var client = S3Client.builder()
-                    .endpointOverride(URI.create(url))
-                    .build()
-            ) {
+            try (var client = createClient()) {
                 var putObjectRequest = PutObjectRequest.builder()
                         .bucket(bucketName)
                         .key(metadata.fileName())
@@ -71,5 +68,20 @@ public class S3StorageService implements StorageService {
             PresignedGetObjectRequest presignedRequest = presigner.presignGetObject(presignRequest);
             return presignedRequest.url().toExternalForm();
         }
+    }
+
+    @Override
+    public Mono<Void> deleteFile(String name) {
+        try (var client = createClient()) {
+            return Mono.fromRunnable(() -> client.deleteObject(builder -> builder.bucket(bucketName).key(name)));
+        } catch (Exception e) {
+            throw new ExceptionInApplication("", ExceptionType.INVALID);
+        }
+    }
+
+    private S3Client createClient() {
+        return S3Client.builder()
+                .endpointOverride(URI.create(url))
+                .build();
     }
 }

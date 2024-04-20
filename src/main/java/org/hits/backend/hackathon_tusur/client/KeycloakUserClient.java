@@ -16,11 +16,13 @@ import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -42,7 +44,7 @@ public class KeycloakUserClient implements UserClient {
         userRepresentation.setEmailVerified(false);
         userRepresentation.setEnabled(true);
         userRepresentation.setAttributes(Map.of(
-                "birthDate", List.of(entity.birthDate().toString()),
+                "birthDate", List.of(entity.birthDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))),
                 "fullName", List.of(entity.fullName())
         ));
         userRepresentation.setCredentials(List.of(passwordCred));
@@ -126,6 +128,20 @@ public class KeycloakUserClient implements UserClient {
         }
         UserRepresentation userRepresentation = userRepresentations.getFirst();
         return Optional.of(userRepresentationToEntity(userRepresentation));
+    }
+
+    @Override
+    public Stream<UserEntity> getUsersByName(String userName) {
+        UsersResource usersResource = getUsersResource();
+        List<UserRepresentation> userRepresentations;
+
+        if (!userName.isEmpty()) {
+            userRepresentations = usersResource.search(userName, true);
+        } else {
+            userRepresentations = usersResource.list();
+        }
+
+        return userRepresentations.stream().map(this::userRepresentationToEntity);
     }
 
     private UsersResource getUsersResource() {

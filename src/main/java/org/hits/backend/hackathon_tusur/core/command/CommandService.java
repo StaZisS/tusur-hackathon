@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,7 +25,7 @@ public class CommandService {
         }
 
         var entity = new CommandEntity(
-                null,
+                UUID.randomUUID().toString(),
                 dto.name(),
                 dto.description()
         );
@@ -46,7 +47,7 @@ public class CommandService {
     public List<CommandDto> getCommands(String commandName) {
         return commandRepository.getCommands(commandName)
                 .map(this::mapToCommandDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Transactional

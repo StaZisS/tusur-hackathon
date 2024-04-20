@@ -12,7 +12,9 @@ import org.hits.backend.hackathon_tusur.public_interface.exception.ExceptionType
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +29,7 @@ public class AffiliateService {
             throw new ExceptionInApplication("Affiliate with name " + dto.name() + " already exists", ExceptionType.ALREADY_EXISTS);
         }
         var affiliateEntity = new AffiliateEntity(
-                null,
+                UUID.randomUUID().toString(),
                 dto.name(),
                 dto.address()
         );
@@ -92,6 +94,16 @@ public class AffiliateService {
         );
 
         userRepository.updateUser(user);
+    }
+
+    public List<AffiliateDto> getAffiliatesByName(String name) {
+        return affiliateRepository.getAffiliatesByName(name)
+                .map(affiliateEntity -> new AffiliateDto(
+                        affiliateEntity.id(),
+                        affiliateEntity.name(),
+                        affiliateEntity.address()
+                ))
+                .toList();
     }
 
     public Optional<AffiliateDto> getAffiliate(String affiliateId) {

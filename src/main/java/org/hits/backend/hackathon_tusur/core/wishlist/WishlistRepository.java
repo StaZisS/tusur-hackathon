@@ -7,6 +7,8 @@ public interface WishlistRepository {
     String createWishlist(WishlistEntity entity);
     void updateWishlist(WishlistEntity entity);
     Optional<WishlistEntity> getWishlistByUserId(String userId);
+    Stream<WishlistEntity> getWishlistsBeforeDate(Integer secondsBefore);
+    Stream<WishlistEntity> getExpiredWishlists();
 
     String addItemsToWishlist(WishlistItemEntity entity);
     void removeItemsFromWishlist(String id);

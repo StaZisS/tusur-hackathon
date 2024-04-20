@@ -1,5 +1,6 @@
 package org.hits.backend.hackathon_tusur.rest.wishlist;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.hits.backend.hackathon_tusur.core.wishlist.WishlistService;
@@ -28,7 +29,8 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/wishlist")
-@Tag(name = "Test Controller", description = "Test controller for working with wishlist")
+@SecurityRequirement(name = "oauth2")
+@Tag(name = "Wishlist", description = "Test controller for working with wishlist")
 public class WishlistController {
     private final WishlistService wishlistService;
 
