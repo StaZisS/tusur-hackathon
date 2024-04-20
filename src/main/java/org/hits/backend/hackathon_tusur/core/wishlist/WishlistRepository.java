@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 public interface WishlistRepository {
+    WishlistEntity getWishList(String wishListId);
     String createWishlist(WishlistEntity entity);
     void updateWishlist(WishlistEntity entity);
     Optional<WishlistEntity> getWishlistByUserId(String userId);

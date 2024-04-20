@@ -15,6 +15,8 @@ import org.hits.backend.hackathon_tusur.public_interface.wishlist.UpdateItemInWi
 import org.hits.backend.hackathon_tusur.public_interface.wishlist.WishlistDto;
 import org.hits.backend.hackathon_tusur.public_interface.wishlist.WishlistItemFullDto;
 import org.hits.backend.hackathon_tusur.rest.wishlist.AddWishListLinkDto;
+import org.hits.backend.hackathon_tusur.websocket.chat.v1.ResponseMessageDto;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +30,7 @@ import java.util.UUID;
 public class WishlistService {
     private final WishlistRepository wishlistRepository;
     private final StorageService storageService;
+    private final SimpMessagingTemplate messagingTemplate;
     private final WishlistMapper wishlistMapper;
 
     @Transactional
@@ -41,6 +44,10 @@ public class WishlistService {
                 Optional.empty()
         );
         return wishlistRepository.createWishlist(entity);
+    }
+
+    public WishlistEntity getById(String wishListId) {
+        return wishlistRepository.getWishList(wishListId);
     }
 
     @Transactional
@@ -149,7 +156,13 @@ public class WishlistService {
                 dto.rating().orElse(item.rating()),
                 dto.isClosed().orElse(item.isClosed())
         );
+
         wishlistRepository.updateItemsInWishlist(newItem);
+
+        if (dto.isClosed().isPresent()) {
+            var response = new ResponseMessageDto(UUID.randomUUID(), "", wishlist.userId(), newItem.name(), true);
+            messagingTemplate.convertAndSend("/topic/" + wishlist.userId() + "/messages", response);
+        }
     }
 
     @Transactional
