@@ -23,6 +23,12 @@ CREATE TABLE affiliate
     name    VARCHAR(255) NOT NULL,
     address VARCHAR(255) NOT NULL
 );
+
+INSERT INTO affiliate (id, name, address) VALUES ('579c8fa4-b527-4516-a468-d3d6b571f818', 'Томский офис', 'пр-кт Ленина 32');
+INSERT INTO affiliate (id, name, address) VALUES ('579c8fa4-b527-4516-a468-d3d6b571f811', 'Московский офис', 'ул. Ломоносова 32');
+INSERT INTO affiliate (id, name, address) VALUES ('679c8fa4-b527-4516-a468-d3d6b571f811', 'Санкт-Петербургский офис', 'ул. Петрова 33');
+INSERT INTO affiliate (id, name, address) VALUES ('779c8fa4-b527-4516-a468-d3d6b571f811', 'Кипрский офис', 'ул. Джобусам 34');
+
 -- rollback DROP TABLE affiliate;
 
 -- changeset gordey_dovydenko:3
@@ -32,6 +38,12 @@ CREATE TABLE command
     name        VARCHAR(255) NOT NULL,
     description VARCHAR(255) NOT NULL
 );
+
+INSERT INTO command (id, name, description) VALUES ('529c8fa4-b527-4516-a468-d3d6b571f818', 'Tinkoff SRE', 'Команда быстрого реагирования');
+INSERT INTO command (id, name, description) VALUES ('179c8fa4-b527-4516-a468-d3d6b521f818', 'Tinkoff Backend', 'Делаем высоконагруженные сервисы');
+INSERT INTO command (id, name, description) VALUES ('279c8fa4-b527-4516-a468-d3d6b551f818', 'Tinkoff Frontend', 'Создаем красоту для Вас');
+INSERT INTO command (id, name, description) VALUES ('279c8fa4-b527-4516-a468-d3d6b551f818', 'Tinkoff HR', 'Самая дружная команда');
+
 -- rollback DROP TABLE command;
 
 -- changeset gordey_dovydenko:4
