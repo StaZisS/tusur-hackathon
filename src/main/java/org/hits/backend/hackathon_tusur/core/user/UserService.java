@@ -157,6 +157,7 @@ public class UserService {
 
     public List<UserDto> getUsersByName(String userName) {
         return userClient.getUsersByName(userName)
+                .stream()
                 .map(user -> new UserDto(
                         user.id(),
                         user.username(),
