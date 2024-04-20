@@ -10,11 +10,7 @@ import org.hits.backend.hackathon_tusur.public_interface.user.UpdateUserDto;
 import org.hits.backend.hackathon_tusur.public_interface.user.UserDto;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -61,11 +57,28 @@ public class UserController {
 
     @GetMapping
     public List<CommonUserResponse> getUsers(@RequestParam("user_full_name") String userFullName) {
-        var response = userService.getUsersByName(userFullName);
+        List<UserDto> response = userService.getUsersByName(userFullName);
         return response.stream()
                 .map(this::mapToCommonUserResponse)
                 .toList();
     }
+
+    @GetMapping("/profile/{userId}")
+    public CommonUserOneCommandDto getUsersById(@PathVariable String userId) {
+        UserDto response = userService.getUser(userId);
+        return new CommonUserOneCommandDto(
+                response.id(),
+                response.username(),
+                response.email(),
+                response.fullName(),
+                response.birthDate(),
+                response.affiliate(),
+                response.onlineStatus(),
+                response.commands() != null && !response.commands().isEmpty() ? response.commands().getFirst() : null,
+                response.photoUrl()
+        );
+    }
+
 
     private FullUserResponse mapToFullUserResponse(UserDto dto) {
         return new FullUserResponse(

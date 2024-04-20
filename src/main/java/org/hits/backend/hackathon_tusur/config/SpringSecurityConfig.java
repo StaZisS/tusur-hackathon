@@ -30,7 +30,8 @@ public class SpringSecurityConfig {
     private static final String[] WHITE_LIST = {
             "/swagger-ui/**",
             "/v3/api-docs/**",
-            "/ws/**"
+            "/ws/**",
+            "/user/profile/**"
     };
 
     @Bean

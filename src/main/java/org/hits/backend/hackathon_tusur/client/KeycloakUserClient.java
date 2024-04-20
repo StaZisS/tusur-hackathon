@@ -44,7 +44,7 @@ public class KeycloakUserClient implements UserClient {
         userRepresentation.setEmailVerified(false);
         userRepresentation.setEnabled(true);
         userRepresentation.setAttributes(Map.of(
-                "birthDate", List.of(entity.birthDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))),
+                "birthDate", List.of(entity.birthDate().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"))),
                 "fullName", List.of(entity.fullName())
         ));
         userRepresentation.setCredentials(List.of(passwordCred));
@@ -132,16 +132,22 @@ public class KeycloakUserClient implements UserClient {
     }
 
     @Override
-    public Stream<UserEntity> getUsersByName(String userName) {
+    public List<UserEntity> getUsersByName(String userName) {
         UsersResource usersResource = getUsersResource();
-        Stream<UserEntity> userRepresentations = usersResource.list()
-                .stream()
-                .map(this::userRepresentationToEntity);
+        List<UserEntity> userRepresentations = List.of();
+        try {
+            userRepresentations = usersResource.list()
+                    .stream().map(this::userRepresentationToEntity)
+                    .filter(Objects::nonNull)
+                    .toList();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         if (!userName.isEmpty()) {
-            userRepresentations = userRepresentations.filter(user ->
-                    user.fullName().contains(userName.toLowerCase()) || user.fullName().contains(userName.toUpperCase())
-            );
+            userRepresentations = userRepresentations.stream().filter(user ->
+                    user.fullName().toLowerCase().contains(userName.toLowerCase()))
+                    .toList();
         }
 
         return userRepresentations;
@@ -154,14 +160,19 @@ public class KeycloakUserClient implements UserClient {
 
     private UserEntity userRepresentationToEntity(UserRepresentation userRepresentation) {
         var additionalAttributes = userRepository.getUserById(userRepresentation.getId())
-                .orElseThrow(() -> new ExceptionInApplication("User not found", ExceptionType.NOT_FOUND));
+                .orElse(null);
+
+        if (additionalAttributes == null) {
+            return null;
+        }
+
         return new UserEntity(
                 userRepresentation.getId(),
                 userRepresentation.getUsername(),
                 userRepresentation.getEmail(),
                 null,
                 userRepresentation.getAttributes().get("fullName").getFirst(),
-                LocalDate.parse(userRepresentation.getAttributes().get("birthDate").getFirst()),
+                LocalDate.parse(userRepresentation.getAttributes().get("birthDate").getFirst(), DateTimeFormatter.ofPattern("MM/dd/yyyy")),
                 additionalAttributes.affiliateId(),
                 additionalAttributes.deliveryDateBefore(),
                 additionalAttributes.onlineStatus()
