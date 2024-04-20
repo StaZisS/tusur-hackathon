@@ -134,15 +134,17 @@ public class KeycloakUserClient implements UserClient {
     @Override
     public Stream<UserEntity> getUsersByName(String userName) {
         UsersResource usersResource = getUsersResource();
-        List<UserRepresentation> userRepresentations;
+        Stream<UserEntity> userRepresentations = usersResource.list()
+                .stream()
+                .map(this::userRepresentationToEntity);
 
         if (!userName.isEmpty()) {
-            userRepresentations = usersResource.search(userName, true);
-        } else {
-            userRepresentations = usersResource.list();
+            userRepresentations = userRepresentations.filter(user ->
+                    user.fullName().contains(userName.toLowerCase()) || user.fullName().contains(userName.toUpperCase())
+            );
         }
 
-        return userRepresentations.stream().map(this::userRepresentationToEntity);
+        return userRepresentations;
     }
 
     private UsersResource getUsersResource() {
