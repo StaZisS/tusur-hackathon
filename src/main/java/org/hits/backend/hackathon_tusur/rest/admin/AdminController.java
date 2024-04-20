@@ -60,6 +60,7 @@ public class AdminController {
                 commandId,
                 photo
         );
+
         return userService.createUser(dto);
     }
 

@@ -24,11 +24,13 @@ public class SpringSecurityConfig {
     private static final String[] WHITE_LIST = {
             "/swagger-ui/**",
             "/v3/api-docs/**",
+            "/ws/**"
     };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors(Customizer.withDefaults())
                 .csrf(CsrfConfigurer::disable)
                 .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(c -> c.requestMatchers(WHITE_LIST).permitAll()

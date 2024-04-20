@@ -849,8 +849,8 @@
       "clientId": "users-app",
       "name": "",
       "description": "",
-      "rootUrl": "http://51.250.30.109:8080",
-      "adminUrl": "http://51.250.30.109:8080",
+      "rootUrl": "http://158.160.75.21:8080",
+      "adminUrl": "http://158.160.75.21:8080",
       "baseUrl": "",
       "surrogateAuthRequired": false,
       "enabled": true,
@@ -861,7 +861,7 @@
         "*"
       ],
       "webOrigins": [
-        "http://51.250.30.109:8080"
+        "http://158.160.75.21:8080"
       ],
       "notBefore": 0,
       "bearerOnly": false,

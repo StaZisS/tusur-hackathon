@@ -1,4 +1,4 @@
-POST http://51.250.30.109:8082/realms/hits-project/protocol/openid-connect/token
+POST http://158.160.75.21:8082/realms/hits-project/protocol/openid-connect/token
 Content-Type: application/x-www-form-urlencoded
 
 client_id=users-app&client_secret=12345678&grant_type=password&username=kyz&password=12345678

@@ -6,6 +6,7 @@ import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -51,5 +52,18 @@ public class UserRepositoryImpl implements UserRepository {
         return create.selectFrom(USERS)
                 .where(USERS.ID.eq(userId))
                 .fetchOptional(USER_ENTITY_MAPPER);
+    }
+
+    @Override
+    public List<UserEntity> getAllUsers() {
+        return create.selectFrom(USERS)
+                .fetch(USER_ENTITY_MAPPER);
+    }
+
+    @Override
+    public List<UserEntity> getAllUsersByAffiliateId(String affiliateId) {
+        return create.selectFrom(USERS)
+                .where(USERS.AFFILIATE_ID.eq(affiliateId))
+                .fetch(USER_ENTITY_MAPPER);
     }
 }

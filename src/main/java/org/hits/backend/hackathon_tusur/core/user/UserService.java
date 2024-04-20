@@ -71,7 +71,7 @@ public class UserService {
         return oauthId;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public UserDto getUser(String userId) {
         var user = getUserEntity(userId);
         return new UserDto(

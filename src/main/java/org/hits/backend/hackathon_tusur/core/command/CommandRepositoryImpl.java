@@ -6,6 +6,7 @@ import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -90,5 +91,36 @@ public class CommandRepositoryImpl implements CommandRepository {
                 .where(USER_COMMAND.USER_ID.eq(userId))
                 .fetchStream()
                 .map(record -> COMMAND_ENTITY_MAPPER.map(record.into(COMMAND)));
+    }
+
+    @Override
+    public List<UserCommandEntity> getUserCommands(String userId) {
+        return create.selectFrom(USER_COMMAND)
+                .where(USER_COMMAND.USER_ID.eq(userId))
+                .fetch()
+                .map(USER_COMMAND_ENTITY_MAPPER);
+    }
+
+    @Override
+    public List<String> getUserIdsByCommandId(String commandId) {
+        return create.select(USER_COMMAND.USER_ID)
+                .from(USER_COMMAND)
+                .where(USER_COMMAND.COMMAND_ID.eq(commandId))
+                .fetch(USER_COMMAND.USER_ID);
+    }
+
+    @Override
+    public List<String> getCommandIdsByUserId(String userId) {
+        return create.select(USER_COMMAND.COMMAND_ID)
+                .from(USER_COMMAND)
+                .where(USER_COMMAND.USER_ID.eq(userId))
+                .fetch(USER_COMMAND.COMMAND_ID);
+    }
+
+    @Override
+    public Optional<CommandEntity> getCommandById(String commandId) {
+        return create.selectFrom(COMMAND)
+                .where(COMMAND.ID.eq(commandId))
+                .fetchOptional(COMMAND_ENTITY_MAPPER);
     }
 }
