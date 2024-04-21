@@ -2,8 +2,6 @@
 set -e
 echo "***** Execute main operation *****"
 
-echo "${DB_URL}"
-
 liquibase --headless=true --url="${DB_URL}" --username=$DB_USER --password=$DB_PASSWORD --default-schema-name=$DB_SCHEMA "$@" --changelog-file=changelog/root-changelog.yml
 echo "***** Operation completed *****"
 echo "${DB_URL}"
