@@ -40,10 +40,10 @@ export const CommandCard = ({id, name, description}: CommandCardProps) => {
                 onContinue={onDelete}
             />
 
-            <Card className="w-full flex justify-between h-16 items-center px-4">
-                <div>
+            <Card className="w-full flex justify-between h-16 items-center p-6 py-10">
+                <div className='flex items-center justify-items-center gap-4'>
                     <CardTitle>{name}</CardTitle>
-                    <CardContent>{description}</CardContent>
+                    <CardContent className='p-0'>{description}</CardContent>
                 </div>
                 <div className="flex justify-between gap-2">
                     <Button onClick={() => setIsModalEditActive(true)}>Редактировать</Button>
@@ -51,6 +51,7 @@ export const CommandCard = ({id, name, description}: CommandCardProps) => {
                             onClick={() => setIsAlertDialogOpen(true)}>Удалить</Button>
                 </div>
             </Card>
+
         </>
     );
 }
