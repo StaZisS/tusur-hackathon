@@ -1,4 +1,4 @@
-package org.hits.backend.hackathon_tusur.client;
+package org.hits.backend.hackathon_tusur.client.keycloak;
 
 
 import org.hits.backend.hackathon_tusur.core.user.UserEntity;

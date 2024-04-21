@@ -1,4 +1,4 @@
-package org.hits.backend.hackathon_tusur.client;
+package org.hits.backend.hackathon_tusur.client.keycloak;
 
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
@@ -17,12 +17,10 @@ import org.keycloak.representations.idm.UserRepresentation;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @Slf4j

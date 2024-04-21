@@ -1,7 +1,7 @@
 package org.hits.backend.hackathon_tusur.core.affiliate;
 
 import lombok.RequiredArgsConstructor;
-import org.hits.backend.hackathon_tusur.client.UserClient;
+import org.hits.backend.hackathon_tusur.client.keycloak.UserClient;
 import org.hits.backend.hackathon_tusur.core.user.UserEntity;
 import org.hits.backend.hackathon_tusur.core.user.UserRepository;
 import org.hits.backend.hackathon_tusur.public_interface.affiliate.AffiliateDto;
