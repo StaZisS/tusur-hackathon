@@ -10,5 +10,4 @@ public record ResponseMessageDto(
         boolean isNotification,
         String fullName,
         String photoUrl
-) {
-}
+) {}
