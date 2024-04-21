@@ -1,7 +1,8 @@
 package org.hits.backend.hackathon_tusur.config;
 
-import org.hits.backend.hackathon_tusur.client.KeycloakRoleClient;
-import org.hits.backend.hackathon_tusur.client.KeycloakUserClient;
+import org.hits.backend.hackathon_tusur.client.gpt.YandexGptClient;
+import org.hits.backend.hackathon_tusur.client.keycloak.KeycloakRoleClient;
+import org.hits.backend.hackathon_tusur.client.keycloak.KeycloakUserClient;
 import org.hits.backend.hackathon_tusur.core.user.UserRepository;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;
@@ -9,6 +10,7 @@ import org.keycloak.admin.client.KeycloakBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
 public class ClientBeans {
@@ -46,6 +48,19 @@ public class ClientBeans {
         return new KeycloakRoleClient(
                 keycloak,
                 realm
+        );
+    }
+
+    @Bean
+    public YandexGptClient yandexGptClient(
+            @Value("${yandexApi.foundationModelsUri}") String baseUrl,
+            @Value("${yandexApi.token}") String token,
+            @Value("${yandexApi.modelUri}") String modelUri) {
+        return new YandexGptClient(WebClient.builder()
+                .baseUrl(baseUrl)
+                .defaultHeader("Authorization", "Api-Key " + token)
+                .build(),
+                modelUri
         );
     }
 }

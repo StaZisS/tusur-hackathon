@@ -2,7 +2,7 @@ package org.hits.backend.hackathon_tusur.core.subscribe.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hits.backend.hackathon_tusur.client.UserClient;
+import org.hits.backend.hackathon_tusur.client.keycloak.UserClient;
 import org.hits.backend.hackathon_tusur.core.affiliate.AffiliateService;
 import org.hits.backend.hackathon_tusur.core.command.CommandRepository;
 import org.hits.backend.hackathon_tusur.core.subscribe.repository.SubscribeEntity;
@@ -16,8 +16,6 @@ import org.hits.backend.hackathon_tusur.public_interface.exception.ExceptionType
 import org.hits.backend.hackathon_tusur.public_interface.user.UserDto;
 import org.hits.backend.hackathon_tusur.rest.subscribe.AffiliateSubscribeDto;
 import org.hits.backend.hackathon_tusur.rest.subscribe.CommandSubscribeDto;
-import org.hits.backend.hackathon_tusur.rest.subscribe.UserSubscribeDto;
-import org.hits.backend.hackathon_tusur.rest.user.CommonUserResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

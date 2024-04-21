@@ -46,28 +46,32 @@ export const UserCart = ({
                 onContinue={onDelete}
             />
             <Card className="w-full flex flex-col px-4 py-4 space-y-2">
-                <div className='flex gap-2'>
-                    <div>
-                        <Avatar>
-                            <AvatarImage src={photoUrl} alt={fullName}/>
-                            <AvatarFallback>{fullName[0]}</AvatarFallback>
-                        </Avatar>
-                    </div>
-                    <div>
-                        <div className='font-bold text-xl'>
-                            <Link to={`/users/${id}`}>
-                                <>{fullName}</>
-                            </Link>
+                <div className='flex gap-2 items-center'>
+                    <div className='flex flex-auto space-x-4 items-center'>
+                        <div>
+                            <Avatar className='h-20 w-20'>
+                                <AvatarImage src={photoUrl} alt={fullName}/>
+                                <AvatarFallback>{fullName[0]}</AvatarFallback>
+                            </Avatar>
                         </div>
-                        <div className='text-gray-500'>{username}</div>
+                        <div>
+                            <div className='font-bold text-xl'>
+                                <Link to={`/users/${id}`}>
+                                    <>{fullName}</>
+                                </Link>
+                            </div>
+                            <div className='text-gray-500'>{username}</div>
+                        </div>
+                        <div>
+                            <div className='text-gray-500'>{email}</div>
+                            <div className='text-gray-500'>{affiliateName}</div>
+                        </div>
+                        <div>
+                            <div className='text-gray-500 font-medium'>{birthDate}</div>
+                        </div>
+
                     </div>
-                    <div>
-                        <div className='text-gray-500'>{email}</div>
-                        <div className='text-gray-500'>{birthDate}</div>
-                    </div>
-                    <div>
-                        <div className='text-gray-500'>{affiliateName}</div>
-                    </div>
+
                     <div>
                         <Button variant="destructive" loading={isDeleteLoading}
                                 onClick={() => setIsAlertDialogOpen(true)}>Удалить</Button>

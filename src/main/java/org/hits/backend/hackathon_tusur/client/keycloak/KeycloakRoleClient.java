@@ -1,4 +1,4 @@
-package org.hits.backend.hackathon_tusur.client;
+package org.hits.backend.hackathon_tusur.client.keycloak;
 
 import lombok.RequiredArgsConstructor;
 import org.keycloak.admin.client.Keycloak;

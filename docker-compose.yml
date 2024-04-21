@@ -46,6 +46,15 @@ services:
     networks:
       - app
 
+  front:
+    build:
+      context: .
+      dockerfile: ./web/Dockerfile
+    ports:
+      - '5173:5173'
+    networks:
+      - app
+
   migration:
     image: migration:latest
     env_file:

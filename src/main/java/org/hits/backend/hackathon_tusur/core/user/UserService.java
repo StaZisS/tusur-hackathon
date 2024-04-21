@@ -1,8 +1,8 @@
 package org.hits.backend.hackathon_tusur.core.user;
 
 import lombok.RequiredArgsConstructor;
-import org.hits.backend.hackathon_tusur.client.RoleClient;
-import org.hits.backend.hackathon_tusur.client.UserClient;
+import org.hits.backend.hackathon_tusur.client.keycloak.RoleClient;
+import org.hits.backend.hackathon_tusur.client.keycloak.UserClient;
 import org.hits.backend.hackathon_tusur.core.affiliate.AffiliateService;
 import org.hits.backend.hackathon_tusur.core.command.CommandService;
 import org.hits.backend.hackathon_tusur.core.file.FileMetadata;
@@ -21,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
