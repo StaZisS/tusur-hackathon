@@ -37,6 +37,8 @@ dependencies {
     implementation libs.spring.websocket
     implementation libs.jackson.data.type
 
+    implementation libs.spring.prometheus
+
     liquibaseRuntime libs.liquibase.core
     liquibaseRuntime libs.postgresql.driver
     liquibaseRuntime libs.picocli
