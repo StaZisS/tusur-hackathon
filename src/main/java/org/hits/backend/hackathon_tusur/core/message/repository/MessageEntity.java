@@ -11,6 +11,7 @@ public record MessageEntity(
         String chatRoomId,
         String senderId,
         String content,
-        OffsetDateTime createdAt
+        OffsetDateTime createdAt,
+        boolean isNotification
 ) {
 }

@@ -25,3 +25,17 @@ yandexApi:
   foundationModelsUri: https://llm.api.cloud.yandex.net/foundationModels/v1/completion
   token: AQVN328SgQPANy5vY4xIWhPuzKoYYzqjOld6KB6j
   modelUri: gpt://b1go9ij03gceo2iisf9b/yandexgpt
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+  metrics:
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
+  prometheus:
+    metrics:
+      export:
+        enabled: true

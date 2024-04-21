@@ -20,6 +20,7 @@ import org.hits.backend.hackathon_tusur.public_interface.wishlist.WishlistItemFu
 import org.hits.backend.hackathon_tusur.rest.wishlist.AddWishListLinkDto;
 import org.hits.backend.hackathon_tusur.websocket.chat.v1.ResponseMessageDto;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -166,7 +167,7 @@ public class WishlistService {
         if (dto.isClosed().isPresent()) {
             var content = "Пользователь " + dto.userId() + " отметил подарок " + newItem.name() + " как купленный";
 
-            var createMessageDto = new CreateMessageDto(dto.userId(), wishlist.userId(), content);
+            var createMessageDto = new CreateMessageDto(dto.userId(), wishlist.userId(), content, true);
             MessageEntity messageEntity = messageService.save(createMessageDto);
             var response = new ResponseMessageDto(messageEntity.messageId(), messageEntity.senderId(), wishlist.userId(),
                     content, true, "", "");

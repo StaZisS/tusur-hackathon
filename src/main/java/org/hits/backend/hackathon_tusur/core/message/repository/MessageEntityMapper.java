@@ -14,7 +14,8 @@ public class MessageEntityMapper implements RecordMapper<MessageRecord, MessageE
                 messageRecord.getChatRoomId(),
                 messageRecord.getSenderId(),
                 messageRecord.getContent(),
-                ZonedDateTime.of(messageRecord.getCreatedAt(), ZoneId.systemDefault()).toOffsetDateTime()
+                ZonedDateTime.of(messageRecord.getCreatedAt(), ZoneId.systemDefault()).toOffsetDateTime(),
+                messageRecord.getIsNotification() != null && messageRecord.getIsNotification()
         );
     }
 }

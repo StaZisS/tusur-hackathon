@@ -20,6 +20,15 @@ public record MessageDto(
         String content,
 
         @JsonProperty("created_at")
-        OffsetDateTime createdAt
+        OffsetDateTime createdAt,
+
+        @JsonProperty("is_notification")
+        boolean isNotification,
+
+        @JsonProperty("full_name")
+        String fullName,
+
+        @JsonProperty("photo_url")
+        String photoUrl
 ) {
 }

@@ -19,6 +19,7 @@ spring-validation = { module = "org.springframework.boot:spring-boot-starter-val
 spring-websocket = { module = "org.springframework.boot:spring-boot-starter-websocket", version.ref = "spring-boot" }
 spring-client = { module = "org.springframework.boot:spring-boot-starter-webflux", version.ref = "spring-boot" }
 jackson-data-type = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310", version = "2.17.0" }
+spring-prometheus = { module = "io.micrometer:micrometer-registry-prometheus", version = "1.12.5" }
 
 #liquibase
 liquibase-core = { module = "org.liquibase:liquibase-core", version = "" }

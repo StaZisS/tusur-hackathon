@@ -28,6 +28,7 @@ public class SpringSecurityConfig {
             "/swagger-ui/**",
             "/v3/api-docs/**",
             "/ws/**",
+            "/actuator/**",
             "/user/profile/**"
     };
 
