@@ -8,6 +8,7 @@ import org.hits.backend.hackathon_tusur.public_interface.message.CreateMessageDt
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -23,7 +24,9 @@ public class ChatController {
     @MessageMapping("/chat")
     public void processMessage(@Payload RequestMessageDto message, @AuthenticationPrincipal UsernamePasswordAuthenticationToken authenticationToken) {
         var senderId = parseToken(authenticationToken);
-        var createMessageDto = new CreateMessageDto(senderId, message.recipientId(), message.content());
+        checkYourSelf(message, senderId);
+
+        var createMessageDto = new CreateMessageDto(senderId, message.recipientId(), message.content(), false);
 
         MessageEntity messageEntity = messageService.save(createMessageDto);
 
@@ -35,8 +38,14 @@ public class ChatController {
         messagingTemplate.convertAndSend("/topic/" + messageEntity.chatRoomId() + "/messages", response);
     }
 
-    public static String parseToken(UsernamePasswordAuthenticationToken authenticationToken) {
+    public String parseToken(UsernamePasswordAuthenticationToken authenticationToken) {
         var token = (JwtAuthenticationToken) authenticationToken.getPrincipal();
         return token.getTokenAttributes().get("sub").toString();
+    }
+
+    private void checkYourSelf(RequestMessageDto message, String senderId) {
+        if (senderId.equals(message.recipientId())) {
+            throw new IllegalArgumentException("You can't send a message to yourself");
+        }
     }
 }

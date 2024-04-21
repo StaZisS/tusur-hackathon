@@ -20,6 +20,7 @@ public class MessageRepositoryImpl implements MessageRepository {
                 .set(MESSAGE.CHAT_ROOM_ID, messageEntity.chatRoomId())
                 .set(MESSAGE.SENDER_ID, messageEntity.senderId())
                 .set(MESSAGE.CONTENT, messageEntity.content())
+                .set(MESSAGE.IS_NOTIFICATION, messageEntity.isNotification())
                 .set(MESSAGE.CREATED_AT, messageEntity.createdAt().toLocalDateTime())
                 .returning(MESSAGE.MESSAGE_ID, MESSAGE.CHAT_ROOM_ID, MESSAGE.SENDER_ID, MESSAGE.CONTENT, MESSAGE.CREATED_AT)
                 .fetchOne(MESSAGE_ENTITY_MAPPER);

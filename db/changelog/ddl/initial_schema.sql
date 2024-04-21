@@ -111,6 +111,7 @@ CREATE TABLE IF NOT EXISTS message
     sender_id    VARCHAR(255) NOT NULL,
     content      VARCHAR(255) NOT NULL,
     created_at   TIMESTAMP    NOT NULL,
+    is_notification BOOLEAN NOT NULL DEFAULT FALSE,
     FOREIGN KEY (chat_room_id) REFERENCES chat_room (chat_room_id),
     FOREIGN KEY (sender_id) REFERENCES users (id)
 );
