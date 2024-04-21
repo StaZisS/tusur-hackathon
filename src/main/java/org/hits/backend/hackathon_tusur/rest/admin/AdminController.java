@@ -73,7 +73,7 @@ public class AdminController {
                            @RequestParam("full_name") Optional<String> fullName,
                            @RequestParam("birth_date") @DateTimeFormat(pattern = "dd/MM/yyyy") Optional<LocalDate> birthDate,
                            @RequestParam("affiliate_id") Optional<String> affiliateId,
-                           @RequestParam("command_id") List<String> commandId,
+                           @RequestParam(value = "command_id", required = false) List<String> commandId,
                            @RequestParam("delivery_date_before") Optional<Integer> deliveryDateBefore,
                            @RequestParam(required = false) Optional<MultipartFile> photo) {
         var dto = new UpdateUserDto(
@@ -84,7 +84,7 @@ public class AdminController {
                 fullName,
                 birthDate,
                 affiliateId,
-                commandId,
+                commandId == null ? List.of() : commandId,
                 deliveryDateBefore,
                 photo
         );

@@ -128,10 +128,13 @@ public class UserService {
     public void updateUser(UpdateUserDto dto) {
         var user = getUserEntity(dto.userId());
 
+        var username = dto.username().filter(newUsername -> !newUsername.equals(user.username()));
+        var email = dto.email().filter(newEmail -> !newEmail.equals(user.email()));
+
         var newUser = new UserEntity(
                 user.id(),
-                dto.username().orElse(user.username()),
-                dto.email().orElse(user.email()),
+                username.orElse(user.username()),
+                email.orElse(user.email()),
                 dto.password().orElse(user.password()),
                 dto.fullName().orElse(user.fullName()),
                 dto.birthDate().orElse(user.birthDate()),
@@ -152,6 +155,19 @@ public class UserService {
         }
 
         userRepository.updateUser(newUser);
+
+        var newUpdateDto = new UpdateUserDto(
+                user.id(),
+                username,
+                email,
+                dto.password(),
+                dto.fullName(),
+                dto.birthDate(),
+                dto.affiliationId(),
+                dto.commandIds(),
+                dto.deliveryDateBefore(),
+                dto.photo()
+        );
         userClient.updateUser(dto, user.id());
     }
 

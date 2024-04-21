@@ -1,0 +1,9 @@
+export const ROOT_API = 'http://localhost:8080';
+export const ROOT_AUTH_SERVER = 'http://158.160.75.21:8082';
+export const LOGIN = `${ROOT_AUTH_SERVER}/realms/hits-project/protocol/openid-connect/token`;
+export const PROFILE = `${ROOT_API}/user/profile`;
+export const CREATE_USER = `${ROOT_API}/admin/user`;
+export const AFFILIATE = `${ROOT_API}/affiliate`;
+export const COMMAND = `${ROOT_API}/command`;
+export const USER = `${ROOT_API}/user`;
+export const ADMIN = `${ROOT_API}/admin`;
