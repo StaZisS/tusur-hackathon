@@ -12,6 +12,7 @@ import org.hits.backend.hackathon_tusur.public_interface.wishlist.UpdateItemInWi
 import org.hits.backend.hackathon_tusur.public_interface.wishlist.WishlistDto;
 import org.hits.backend.hackathon_tusur.public_interface.wishlist.WishlistItemDto;
 import org.hits.backend.hackathon_tusur.public_interface.wishlist.WishlistItemFullDto;
+import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,7 +28,7 @@ import java.util.Optional;
 public class WishlistController {
     private final WishlistService wishlistService;
 
-    @PostMapping("/item")
+    @PostMapping(path = "/item", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String addItemToWishList(@RequestParam(value = "photos", required = false) MultipartFile[] photos,
                                     @RequestParam(value = "name") String name,
                                     @RequestParam(value = "price", required = false) BigDecimal price,
